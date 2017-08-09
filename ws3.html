@@ -298,8 +298,16 @@ Does not imply that there is any operable area in current inventory.</p>
 <dl class="method">
 <dt id="ws3.woodstock.GreedyAreaSelector.operate">
 <code class="descname">operate</code><span class="sig-paren">(</span><em>period</em>, <em>acode</em>, <em>target_area</em>, <em>mask=None</em>, <em>commit_actions=True</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#GreedyAreaSelector.operate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.GreedyAreaSelector.operate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Greedily operate on oldest operable age classes.
-Return missing area.</p>
+<dd><p>Greedily operate on oldest operable age classes.</p>
+<p>Args:
+period (int): Period inded in range [1..n]
+acode (str): Code of action to apply.
+target_area (float): Target area on which to operate.
+mask (str): Mask to filter development types on which to operate.
+commit_actions (bool): Enable commit actions mode (default True).
+verbose (bool): Enable verbose mode (default False).</p>
+<p>Returns:
+Missing area (i.e., difference between target and operated areas).</p>
 </dd></dl>
 
 </dd></dl>

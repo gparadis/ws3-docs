@@ -70,7 +70,19 @@
                 <span class="n">commit_actions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Greedily operate on oldest operable age classes.</span>
-<span class="sd">        Return missing area.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">        period (int): Period inded in range [1..n]</span>
+<span class="sd">        acode (str): Code of action to apply.</span>
+<span class="sd">        target_area (float): Target area on which to operate.</span>
+<span class="sd">        mask (str): Mask to filter development types on which to operate.</span>
+<span class="sd">        commit_actions (bool): Enable commit actions mode (default True).</span>
+<span class="sd">        verbose (bool): Enable verbose mode (default False).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        Missing area (i.e., difference between target and operated areas).</span>
+
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">wm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
         <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="nb">max</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
