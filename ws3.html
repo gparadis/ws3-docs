@@ -234,41 +234,51 @@ left_range False: ub lookup from right (widest possible range)</p>
 <dl class="class">
 <dt id="ws3.woodstock.Action">
 <em class="property">class </em><code class="descclassname">ws3.woodstock.</code><code class="descname">Action</code><span class="sig-paren">(</span><em>code</em>, <em>targetage=None</em>, <em>descr=''</em>, <em>lockexempt=False</em>, <em>components=None</em>, <em>partial=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#Action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.Action" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Encapsulates data for an action.</p>
+</dd></dl>
 
 <dl class="class">
 <dt id="ws3.woodstock.DevelopmentType">
 <em class="property">class </em><code class="descclassname">ws3.woodstock.</code><code class="descname">DevelopmentType</code><span class="sig-paren">(</span><em>key</em>, <em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Encapsulates Woodstock development type (curves, age, area).</p>
+<dd><p>Encapsulates Woodstock development type data (curves, age, area), and provides methods to operate on the data.</p>
 <dl class="method">
 <dt id="ws3.woodstock.DevelopmentType.add_ycomp">
 <code class="descname">add_ycomp</code><span class="sig-paren">(</span><em>ytype</em>, <em>yname</em>, <em>ycomp</em>, <em>first_match=True</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.add_ycomp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.add_ycomp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Add yield component.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.DevelopmentType.area">
 <code class="descname">area</code><span class="sig-paren">(</span><em>period</em>, <em>age=None</em>, <em>area=None</em>, <em>delta=True</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.area" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>If area not specified, returns area inventory for period (optionally age), else sets area for period and age. If delta switch active (default True), area value is interpreted as an increment on current inventory.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.DevelopmentType.compile_action">
 <code class="descname">compile_action</code><span class="sig-paren">(</span><em>acode</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.compile_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.compile_action" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Compile action, given action code.
+This mostly involves resolving operability expression strings into
+lower and upper operability limits, defined as (alo, ahi) age pair for each period.
+Deletes action from self if not operable in any period.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.DevelopmentType.compile_actions">
 <code class="descname">compile_actions</code><span class="sig-paren">(</span><em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.compile_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.compile_actions" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Compile all actions.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.DevelopmentType.grow">
 <code class="descname">grow</code><span class="sig-paren">(</span><em>start_period=1</em>, <em>cascade=True</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.grow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.grow" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Grow self (default starting period 1, and cascading to end of planning horizon).</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.DevelopmentType.initialize_areas">
 <code class="descname">initialize_areas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.initialize_areas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.initialize_areas" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Copy initial inventory to period-1 inventory.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.DevelopmentType.is_operable">
@@ -280,33 +290,38 @@ Does not imply that there is any operable area in current inventory.</p>
 <dl class="method">
 <dt id="ws3.woodstock.DevelopmentType.operable_ages">
 <code class="descname">operable_ages</code><span class="sig-paren">(</span><em>acode</em>, <em>period</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.operable_ages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.operable_ages" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Finds list of ages at which self is operable, given an action code and period index.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.DevelopmentType.operable_area">
 <code class="descname">operable_area</code><span class="sig-paren">(</span><em>acode</em>, <em>period</em>, <em>age=None</em>, <em>cleanup=True</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.operable_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.operable_area" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns 0. if inoperable or no current inventory.</p>
+<dd><p>Returns 0 if inoperable or no current inventory, operable area given action code and period (and optionally age) index otherwise. If cleanup switch activated (default True) and age specified, deletes the ageclass from the inventory dict if operable area is less than self.parent.area_epsilon.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.DevelopmentType.reset_areas">
 <code class="descname">reset_areas</code><span class="sig-paren">(</span><em>period=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.reset_areas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.reset_areas" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Reset areas dict.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.DevelopmentType.resolve_condition">
 <code class="descname">resolve_condition</code><span class="sig-paren">(</span><em>yname</em>, <em>lo</em>, <em>hi</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.resolve_condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.resolve_condition" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Find lower and upper ages that correspond to lo and hi values of yname (interpreted as first occurence of yield value, reading curve from left and right, respectively).</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.DevelopmentType.ycomp">
 <code class="descname">ycomp</code><span class="sig-paren">(</span><em>yname</em>, <em>silent_fail=True</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.ycomp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.ycomp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns yield component, given key (default returns None on invalid key).</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.DevelopmentType.ycomps">
 <code class="descname">ycomps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.ycomps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.ycomps" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns list of yield component keys.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -317,16 +332,8 @@ Does not imply that there is any operable area in current inventory.</p>
 <dl class="method">
 <dt id="ws3.woodstock.GreedyAreaSelector.operate">
 <code class="descname">operate</code><span class="sig-paren">(</span><em>period</em>, <em>acode</em>, <em>target_area</em>, <em>mask=None</em>, <em>commit_actions=True</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#GreedyAreaSelector.operate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.GreedyAreaSelector.operate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Greedily operate on oldest operable age classes.</p>
-<p>Args:
-period (int): Period inded in range [1..n]
-acode (str): Code of action to apply.
-target_area (float): Target area on which to operate.
-mask (str): Mask to filter development types on which to operate.
-commit_actions (bool): Enable commit actions mode (default True).
-verbose (bool): Enable verbose mode (default False).</p>
-<p>Returns:
-Missing area (i.e., difference between target and operated areas).</p>
+<dd><p>Greedily operate on oldest operable age classes.
+Returns missing area (i.e., difference between target and operated areas).</p>
 </dd></dl>
 
 </dd></dl>
@@ -334,21 +341,30 @@ Missing area (i.e., difference between target and operated areas).</p>
 <dl class="class">
 <dt id="ws3.woodstock.Output">
 <em class="property">class </em><code class="descclassname">ws3.woodstock.</code><code class="descname">Output</code><span class="sig-paren">(</span><em>parent</em>, <em>code=None</em>, <em>expression=None</em>, <em>factor=(1.0</em>, <em>1)</em>, <em>description=''</em>, <em>theme_index=-1</em>, <em>is_basic=False</em>, <em>is_level=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#Output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.Output" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Encapsulates data and methods to operate on aggregate outputs from the model.
+Emulates behaviour of Woodstock outputs.
+.. warning:: Behaviour of Woodstock outputs is quite complex. This class needs more work before it is used in a production setting (i.e., resolution of some complex output cases is buggy).</p>
+</dd></dl>
 
 <dl class="class">
 <dt id="ws3.woodstock.WoodstockModel">
 <em class="property">class </em><code class="descclassname">ws3.woodstock.</code><code class="descname">WoodstockModel</code><span class="sig-paren">(</span><em>model_name</em>, <em>model_path</em>, <em>horizon=30</em>, <em>period_length=5</em>, <em>max_age=100</em>, <em>area_epsilon=0.01</em>, <em>curve_epsilon=0.01</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Interface to import Woodstock models.</p>
+<dd><p>Interface to import Woodstock models.
+Also includes methods to simulate growth, applying actions.
+Includes methods to query the model post-simulation (i.e., workaround for broken Outputs class).</p>
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.age_class_distribution">
 <code class="descname">age_class_distribution</code><span class="sig-paren">(</span><em>period</em>, <em>mask=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.age_class_distribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.age_class_distribution" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns age class distribution (dict of areas, keys on age).</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.apply_action">
-<code class="descname">apply_action</code><span class="sig-paren">(</span><em>dtype_key</em>, <em>acode</em>, <em>period</em>, <em>age</em>, <em>area</em>, <em>override_operability=False</em>, <em>fuzzy_age=True</em>, <em>recourse_enabled=True</em>, <em>areaselector=None</em>, <em>verbose=False</em>, <em>compile_sylv_cred=True</em>, <em>compile_harv_cost=True</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.apply_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.apply_action" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">apply_action</code><span class="sig-paren">(</span><em>dtype_key</em>, <em>acode</em>, <em>period</em>, <em>age</em>, <em>area</em>, <em>override_operability=False</em>, <em>fuzzy_age=True</em>, <em>recourse_enabled=True</em>, <em>areaselector=None</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.apply_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.apply_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies action, given action code, development type, period, age, area.
+Can optionally override operability limits, optionally use fuzzy age (i.e., attempt to apply action to proximal age class if specified age is not operable), optionally use default AreaSelector to patch missing area (if recourse enabled).
+Applying an action is a rather complex process, involving testing for operability (JIT-compiling operability expression as required), checking that valid transitions are defined, checking that area is available (possibly using fuzzy age and area selector functions to find missing area), generate list of target development types (from source development type and transition expressions [which may need to be JIT-compiled]), creating new development types (as needed), doing the area accounting correctly (without creating or destroying any area), and compiling the products from the action (which gets a bit complicated in the case of partial cuts…).</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.apply_schedule">
@@ -361,27 +377,33 @@ Also assumes that actions in list are sorted by applied period.</p>
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.commit_actions">
 <code class="descname">commit_actions</code><span class="sig-paren">(</span><em>period=1</em>, <em>repair_future_actions=False</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.commit_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.commit_actions" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Commits applied actions (i.e., apply transitions and grow, default starting at period 1).
+By default, will attempt to repair broken (infeasible) future actions, attempting to replace infeasiblea operated area using default AreaSelector.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.compile_product">
 <code class="descname">compile_product</code><span class="sig-paren">(</span><em>period</em>, <em>expr</em>, <em>acode=None</em>, <em>dtype_keys=None</em>, <em>age=None</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.compile_product"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.compile_product" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Compiles products from applied actions in given period. Parses string expression, which resolves to a single coefficient. Operated area can be filtered on action code, development type key list, and age. Result is product of sum of filtered area and coefficient.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.create_dtype_fromkey">
 <code class="descname">create_dtype_fromkey</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.create_dtype_fromkey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.create_dtype_fromkey" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Creates a new development type, given a key (checks for existing, auto-assigns yield compompontents, auto-assign actions and transitions, checks for operability (filed under inoperable if applicable).</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.dt">
 <code class="descname">dt</code><span class="sig-paren">(</span><em>dtype_key</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.dt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.dt" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns development type, given key (returns None on invalid key).</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.grow">
 <code class="descname">grow</code><span class="sig-paren">(</span><em>start_period=1</em>, <em>cascade=True</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.grow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.grow" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Simulates growth (default startint at period 1 and cascading to the end of the planning horizon).</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.import_actions_section">
@@ -401,12 +423,16 @@ Also assumes that actions in list are sorted by applied period.</p>
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.import_control_section">
 <code class="descname">import_control_section</code><span class="sig-paren">(</span><em>filename_suffix='run'</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.import_control_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.import_control_section" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Imports CONTROL section from a Woodstock model.
+.. warning:: Not implemented yet.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.import_graphics_section">
 <code class="descname">import_graphics_section</code><span class="sig-paren">(</span><em>filename_suffix='gra'</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.import_graphics_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.import_graphics_section" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Imports GRAPHICS section from a Woodstock model.
+.. warning:: Not implemented yet.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.import_landscape_section">
@@ -416,12 +442,16 @@ Also assumes that actions in list are sorted by applied period.</p>
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.import_lifespan_section">
 <code class="descname">import_lifespan_section</code><span class="sig-paren">(</span><em>filename_suffix='lif'</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.import_lifespan_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.import_lifespan_section" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Imports LIFESPAN section from a Woodstock model.
+.. warning:: Not implemented yet.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.import_optimize_section">
 <code class="descname">import_optimize_section</code><span class="sig-paren">(</span><em>filename_suffix='opt'</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.import_optimize_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.import_optimize_section" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Imports OPTIMIZE section from a Woodstock model.
+.. warning:: Not implemented yet.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.import_outputs_section">
@@ -431,7 +461,8 @@ Also assumes that actions in list are sorted by applied period.</p>
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.import_schedule_section">
 <code class="descname">import_schedule_section</code><span class="sig-paren">(</span><em>filename_suffix='seq'</em>, <em>replace_commas=True</em>, <em>filename_prefix=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.import_schedule_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.import_schedule_section" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Imports SCHEDULE section from a Woodstock model.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.import_transitions_section">
@@ -452,12 +483,15 @@ Also assumes that actions in list are sorted by applied period.</p>
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.inventory">
 <code class="descname">inventory</code><span class="sig-paren">(</span><em>period</em>, <em>yname=None</em>, <em>age=None</em>, <em>mask=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.inventory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.inventory" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Flexible method that compiles inventory at given period.
+Unit of return data defaults to area if yname not given, but takes on unit of yield component otherwise. Can be constrained by age and development type mask.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.is_harvest">
 <code class="descname">is_harvest</code><span class="sig-paren">(</span><em>acode</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.is_harvest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.is_harvest" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns True if acode corresponds to a harvesting action.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.match_mask">
@@ -468,38 +502,44 @@ Also assumes that actions in list are sorted by applied period.</p>
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.operable_area">
 <code class="descname">operable_area</code><span class="sig-paren">(</span><em>acode</em>, <em>period</em>, <em>age=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.operable_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.operable_area" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns total operable area, given action code and period (and optionally age).</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.operable_dtypes">
 <code class="descname">operable_dtypes</code><span class="sig-paren">(</span><em>acode</em>, <em>period</em>, <em>mask=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.operable_dtypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.operable_dtypes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns dict (keyed on development type key, values are lists of operable ages).</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.operated_area">
 <code class="descname">operated_area</code><span class="sig-paren">(</span><em>acode</em>, <em>period</em>, <em>dtype_key=None</em>, <em>age=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.operated_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.operated_area" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Compiles operated area, given action code and period (and optionally list of development type keys or age).</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.piece_size">
 <code class="descname">piece_size</code><span class="sig-paren">(</span><em>dtype_key</em>, <em>age</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.piece_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.piece_size" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns piece size, given development type key and age.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.register_curve">
 <code class="descname">register_curve</code><span class="sig-paren">(</span><em>curve</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.register_curve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.register_curve" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Add curve to global curve hash map (uses result of Curve.points() to construct hash key).</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.repair_actions">
 <code class="descname">repair_actions</code><span class="sig-paren">(</span><em>period</em>, <em>areaselector=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.repair_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.repair_actions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Attempts to repair the action schedule for given period.</p>
+<dd><p>Attempts to repair the action schedule for given period, using an AreaSelector object (defaults to class-default areaselector, which is a simple greedy oldest-first selector).</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.reset_actions">
 <code class="descname">reset_actions</code><span class="sig-paren">(</span><em>period=None</em>, <em>acode=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.reset_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.reset_actions" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Resets actions (default resets all periods, all actions, unless period or acode specified).</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.resolve_condition">
@@ -516,7 +556,8 @@ Returns list of ages.</p>
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.resolve_tmask">
 <code class="descname">resolve_tmask</code><span class="sig-paren">(</span><em>dt</em>, <em>tmask</em>, <em>treplace</em>, <em>tappend</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.resolve_tmask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.resolve_tmask" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns new developement type key (tuple of values, one per theme), given developement type and (treplace, tappend) expressions.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.resolve_treplace">
@@ -526,12 +567,15 @@ Returns list of ages.</p>
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.sylv_cred_formula">
 <code class="descname">sylv_cred_formula</code><span class="sig-paren">(</span><em>treatment_type</em>, <em>cover_type</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.sylv_cred_formula"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.sylv_cred_formula" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Select correct sylviculture credit formula, given treatment type and cover type.
+.. warning:: This only works for Quebec!</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.theme_basecodes">
 <code class="descname">theme_basecodes</code><span class="sig-paren">(</span><em>theme_index</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.theme_basecodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.theme_basecodes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return list of base codes, given theme index.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ws3.woodstock.WoodstockModel.tree">

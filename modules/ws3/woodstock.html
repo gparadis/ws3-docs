@@ -70,19 +70,7 @@
                 <span class="n">commit_actions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Greedily operate on oldest operable age classes.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">        period (int): Period inded in range [1..n]</span>
-<span class="sd">        acode (str): Code of action to apply.</span>
-<span class="sd">        target_area (float): Target area on which to operate.</span>
-<span class="sd">        mask (str): Mask to filter development types on which to operate.</span>
-<span class="sd">        commit_actions (bool): Enable commit actions mode (default True).</span>
-<span class="sd">        verbose (bool): Enable verbose mode (default False).</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">        Missing area (i.e., difference between target and operated areas).</span>
-
-<span class="sd">        </span>
+<span class="sd">        Returns missing area (i.e., difference between target and operated areas).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">wm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
         <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="nb">max</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -115,6 +103,10 @@
         <span class="k">return</span> <span class="n">target_area</span></div></div>
     
 <div class="viewcode-block" id="Action"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.Action">[docs]</a><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Encapsulates data for an action.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">code</span><span class="p">,</span>
                  <span class="n">targetage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -138,13 +130,16 @@
     
 <div class="viewcode-block" id="DevelopmentType"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.DevelopmentType">[docs]</a><span class="k">class</span> <span class="nc">DevelopmentType</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Encapsulates Woodstock development type (curves, age, area).</span>
+<span class="sd">    Encapsulates Woodstock development type data (curves, age, area), and provides methods to operate on the data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_bo</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;AND&#39;</span><span class="p">:</span><span class="n">operator</span><span class="o">.</span><span class="n">and_</span><span class="p">,</span> <span class="s1">&#39;&amp;&#39;</span><span class="p">:</span><span class="n">operator</span><span class="o">.</span><span class="n">and_</span><span class="p">,</span> <span class="s1">&#39;OR&#39;</span><span class="p">:</span><span class="n">operator</span><span class="o">.</span><span class="n">or_</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">:</span><span class="n">operator</span><span class="o">.</span><span class="n">or_</span><span class="p">}</span>
     
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">key</span><span class="p">,</span>
                  <span class="n">parent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The key is basically the fully expanded mask (expressed as a tuple of values). The parent is a reference to the WoodstockModel object in which self is embedded.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rc</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">register_curve</span> <span class="c1"># shorthand</span>
@@ -170,6 +165,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">operability</span> <span class="o">=</span> <span class="p">{}</span>
 
 <div class="viewcode-block" id="DevelopmentType.operable_ages"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.DevelopmentType.operable_ages">[docs]</a>    <span class="k">def</span> <span class="nf">operable_ages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acode</span><span class="p">,</span> <span class="n">period</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds list of ages at which self is operable, given an action code and period index.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">acode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">oper_expr</span><span class="p">:</span> <span class="c1"># action not defined for this development type</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">acode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">operability</span><span class="p">:</span> <span class="c1"># action not compiled yet...</span>
@@ -204,7 +202,7 @@
         
 <div class="viewcode-block" id="DevelopmentType.operable_area"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.DevelopmentType.operable_area">[docs]</a>    <span class="k">def</span> <span class="nf">operable_area</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acode</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cleanup</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns 0. if inoperable or no current inventory. </span>
+<span class="sd">        Returns 0 if inoperable or no current inventory, operable area given action code and period (and optionally age) index otherwise. If cleanup switch activated (default True) and age specified, deletes the ageclass from the inventory dict if operable area is less than self.parent.area_epsilon. </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">acode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">oper_expr</span><span class="p">:</span> <span class="c1"># action not defined for this development type</span>
             <span class="k">return</span> <span class="mf">0.</span>
@@ -231,6 +229,9 @@
         <span class="k">assert</span> <span class="kc">False</span></div>
                 
 <div class="viewcode-block" id="DevelopmentType.area"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.DevelopmentType.area">[docs]</a>    <span class="k">def</span> <span class="nf">area</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">area</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If area not specified, returns area inventory for period (optionally age), else sets area for period and age. If delta switch active (default True), area value is interpreted as an increment on current inventory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1">#if area is not None:</span>
         <span class="c1">#    print area</span>
         <span class="c1">#    assert area &gt; 0</span>
@@ -249,17 +250,29 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_areas</span><span class="p">[</span><span class="n">period</span><span class="p">][</span><span class="n">age</span><span class="p">]</span> <span class="o">=</span> <span class="n">area</span></div>
         
 <div class="viewcode-block" id="DevelopmentType.resolve_condition"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.DevelopmentType.resolve_condition">[docs]</a>    <span class="k">def</span> <span class="nf">resolve_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yname</span><span class="p">,</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find lower and upper ages that correspond to lo and hi values of yname (interpreted as first occurence of yield value, reading curve from left and right, respectively).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ycomp</span><span class="p">(</span><span class="n">yname</span><span class="p">))</span> <span class="k">if</span> <span class="n">y</span> <span class="o">&gt;=</span> <span class="n">lo</span> <span class="ow">and</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="n">hi</span><span class="p">]</span></div>
        
 <div class="viewcode-block" id="DevelopmentType.reset_areas"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.DevelopmentType.reset_areas">[docs]</a>    <span class="k">def</span> <span class="nf">reset_areas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset areas dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">periods</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">periods</span> <span class="k">if</span> <span class="n">period</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[</span><span class="n">period</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">period</span> <span class="ow">in</span> <span class="n">periods</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_areas</span><span class="p">[</span><span class="n">period</span><span class="p">]</span> <span class="o">=</span> <span class="n">dd</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DevelopmentType.ycomps"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.DevelopmentType.ycomps">[docs]</a>    <span class="k">def</span> <span class="nf">ycomps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns list of yield component keys.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ycomps</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
             
 <div class="viewcode-block" id="DevelopmentType.ycomp"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.DevelopmentType.ycomp">[docs]</a>    <span class="k">def</span> <span class="nf">ycomp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yname</span><span class="p">,</span> <span class="n">silent_fail</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns yield component, given key (default returns None on invalid key).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">yname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ycomps</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ycomps</span><span class="p">[</span><span class="n">yname</span><span class="p">]:</span> <span class="c1"># complex ycomp not compiled yet</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_compile_complex_ycomp</span><span class="p">(</span><span class="n">yname</span><span class="p">)</span>
@@ -332,12 +345,19 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Problem compileing complex yield: </span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">yname</span><span class="p">,</span> <span class="n">expression</span><span class="p">))</span>
             
 <div class="viewcode-block" id="DevelopmentType.compile_actions"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.DevelopmentType.compile_actions">[docs]</a>    <span class="k">def</span> <span class="nf">compile_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compile all actions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">acode</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">oper_expr</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">compile_action</span><span class="p">(</span><span class="n">acode</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DevelopmentType.compile_action"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.DevelopmentType.compile_action">[docs]</a>    <span class="k">def</span> <span class="nf">compile_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acode</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="c1">#print &#39;compiling action&#39;</span>
-        <span class="c1">#print &#39; &#39;.join(self.key), acode</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compile action, given action code. </span>
+<span class="sd">        This mostly involves resolving operability expression strings into</span>
+<span class="sd">        lower and upper operability limits, defined as (alo, ahi) age pair for each period.</span>
+<span class="sd">        Deletes action from self if not operable in any period.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">operability</span><span class="p">[</span><span class="n">acode</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">expr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">oper_expr</span><span class="p">[</span><span class="n">acode</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_compile_oper_expr</span><span class="p">(</span><span class="n">acode</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
@@ -424,6 +444,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">operability</span><span class="p">[</span><span class="n">acode</span><span class="p">][</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">alo</span><span class="p">,</span> <span class="n">ahi</span><span class="p">)</span> <span class="k">if</span> <span class="n">alo</span> <span class="o">&lt;=</span> <span class="n">ahi</span> <span class="k">else</span> <span class="kc">None</span> 
                 
 <div class="viewcode-block" id="DevelopmentType.add_ycomp"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.DevelopmentType.add_ycomp">[docs]</a>    <span class="k">def</span> <span class="nf">add_ycomp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ytype</span><span class="p">,</span> <span class="n">yname</span><span class="p">,</span> <span class="n">ycomp</span><span class="p">,</span> <span class="n">first_match</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add yield component.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">first_match</span> <span class="ow">and</span> <span class="n">yname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ycomps</span><span class="p">:</span> <span class="k">return</span> <span class="c1"># already exists (reject)</span>
         <span class="k">if</span> <span class="n">ytype</span> <span class="o">==</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_complex_ycomps</span><span class="p">[</span><span class="n">yname</span><span class="p">]</span> <span class="o">=</span> <span class="n">ycomp</span>
@@ -432,15 +455,26 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_ycomps</span><span class="p">[</span><span class="n">yname</span><span class="p">]</span> <span class="o">=</span> <span class="n">ycomp</span></div>
     
 <div class="viewcode-block" id="DevelopmentType.grow"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.DevelopmentType.grow">[docs]</a>    <span class="k">def</span> <span class="nf">grow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_period</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cascade</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Grow self (default starting period 1, and cascading to end of planning horizon).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">end_period</span> <span class="o">=</span> <span class="n">start_period</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">cascade</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">horizon</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start_period</span><span class="p">,</span> <span class="n">end_period</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">reset_areas</span><span class="p">(</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_areas</span><span class="p">[</span><span class="n">p</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_areas</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">age</span><span class="p">,</span> <span class="n">area</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_areas</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span> <span class="bp">self</span><span class="o">.</span><span class="n">_areas</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">age</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">area</span></div>
 
 <div class="viewcode-block" id="DevelopmentType.initialize_areas"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.DevelopmentType.initialize_areas">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_areas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Copy initial inventory to period-1 inventory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_areas</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_areas</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div></div>
         
 <div class="viewcode-block" id="Output"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.Output">[docs]</a><span class="k">class</span> <span class="nc">Output</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Encapsulates data and methods to operate on aggregate outputs from the model.</span>
+<span class="sd">    Emulates behaviour of Woodstock outputs.</span>
+<span class="sd">    .. warning:: Behaviour of Woodstock outputs is quite complex. This class needs more work before it is used in a production setting (i.e., resolution of some complex output cases is buggy).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">parent</span><span class="p">,</span>
                  <span class="n">code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -650,6 +684,8 @@
 <div class="viewcode-block" id="WoodstockModel"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel">[docs]</a><span class="k">class</span> <span class="nc">WoodstockModel</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Interface to import Woodstock models.</span>
+<span class="sd">    Also includes methods to simulate growth, applying actions.</span>
+<span class="sd">    Includes methods to query the model post-simulation (i.e., workaround for broken Outputs class).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_ytypes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;*Y&#39;</span><span class="p">:</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;*YT&#39;</span><span class="p">:</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;*YC&#39;</span><span class="p">:</span><span class="s1">&#39;c&#39;</span><span class="p">}</span>
     <span class="n">tree</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="p">(</span><span class="n">f</span><span class="p">))(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">dd</span><span class="p">(</span><span class="n">a</span><span class="p">(</span><span class="n">a</span><span class="p">))))</span>
@@ -717,18 +753,30 @@
         <span class="c1">#self.total_volume_yname = total_volume_yname</span>
 
 <div class="viewcode-block" id="WoodstockModel.is_harvest"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.is_harvest">[docs]</a>    <span class="k">def</span> <span class="nf">is_harvest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acode</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns True if acode corresponds to a harvesting action.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">acode</span><span class="p">]</span><span class="o">.</span><span class="n">is_harvest</span></div>
         
 <div class="viewcode-block" id="WoodstockModel.piece_size"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.piece_size">[docs]</a>    <span class="k">def</span> <span class="nf">piece_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype_key</span><span class="p">,</span> <span class="n">age</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns piece size, given development type key and age.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtypes</span><span class="p">[</span><span class="n">dtype_key</span><span class="p">]</span><span class="o">.</span><span class="n">ycomp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">piece_size_yname</span><span class="p">)[</span><span class="n">age</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">piece_size_factor</span></div>
 
 <div class="viewcode-block" id="WoodstockModel.dt"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.dt">[docs]</a>    <span class="k">def</span> <span class="nf">dt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype_key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns development type, given key (returns None on invalid key).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtypes</span><span class="p">[</span><span class="n">dtype_key</span><span class="p">]</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="WoodstockModel.age_class_distribution"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.age_class_distribution">[docs]</a>    <span class="k">def</span> <span class="nf">age_class_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns age class distribution (dict of areas, keys on age).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="n">age</span><span class="p">:</span><span class="mf">0.</span> <span class="k">for</span> <span class="n">age</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ages</span><span class="p">}</span>
         <span class="n">dtype_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unmask</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="k">if</span> <span class="n">mask</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtypes</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">dtk</span> <span class="ow">in</span> <span class="n">dtype_keys</span><span class="p">:</span>
@@ -738,6 +786,9 @@
         <span class="k">return</span> <span class="n">result</span></div>
            
 <div class="viewcode-block" id="WoodstockModel.operable_dtypes"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.operable_dtypes">[docs]</a>    <span class="k">def</span> <span class="nf">operable_dtypes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acode</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns dict (keyed on development type key, values are lists of operable ages).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">dtype_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unmask</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="k">if</span> <span class="n">mask</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtypes</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">dtk</span> <span class="ow">in</span> <span class="n">dtype_keys</span><span class="p">:</span>
@@ -748,6 +799,10 @@
         <span class="k">return</span> <span class="n">result</span></div>
 
 <div class="viewcode-block" id="WoodstockModel.inventory"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.inventory">[docs]</a>    <span class="k">def</span> <span class="nf">inventory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">yname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Flexible method that compiles inventory at given period.</span>
+<span class="sd">        Unit of return data defaults to area if yname not given, but takes on unit of yield component otherwise. Can be constrained by age and development type mask.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="mf">0.</span>
         <span class="n">dtype_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unmask</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="k">if</span> <span class="n">mask</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtypes</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">dtk</span> <span class="ow">in</span> <span class="n">dtype_keys</span><span class="p">:</span>
@@ -763,6 +818,9 @@
         <span class="k">return</span> <span class="n">result</span></div>
         
 <div class="viewcode-block" id="WoodstockModel.operable_area"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.operable_area">[docs]</a>    <span class="k">def</span> <span class="nf">operable_area</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acode</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns total operable area, given action code and period (and optionally age).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">operable_area</span><span class="p">(</span><span class="n">acode</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="k">for</span> <span class="n">dt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtypes</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
         
 <div class="viewcode-block" id="WoodstockModel.initialize_areas"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.initialize_areas">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_areas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -772,6 +830,9 @@
         <span class="k">for</span> <span class="n">dt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtypes</span><span class="o">.</span><span class="n">values</span><span class="p">():</span> <span class="n">dt</span><span class="o">.</span><span class="n">initialize_areas</span><span class="p">()</span></div>
         
 <div class="viewcode-block" id="WoodstockModel.register_curve"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.register_curve">[docs]</a>    <span class="k">def</span> <span class="nf">register_curve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">curve</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add curve to global curve hash map (uses result of Curve.points() to construct hash key). </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">key</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">curve</span><span class="o">.</span><span class="n">points</span><span class="p">())</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">curves</span><span class="p">:</span>
             <span class="c1"># new curve (lock and register)</span>
@@ -785,7 +846,10 @@
     <span class="c1">#     &quot;&quot;&quot;</span>
     <span class="c1">#     return dd(self._rdd)   </span>
     
-<div class="viewcode-block" id="WoodstockModel.reset_actions"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.reset_actions">[docs]</a>    <span class="k">def</span> <span class="nf">reset_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">acode</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>       
+<div class="viewcode-block" id="WoodstockModel.reset_actions"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.reset_actions">[docs]</a>    <span class="k">def</span> <span class="nf">reset_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">acode</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets actions (default resets all periods, all actions, unless period or acode specified).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">period</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="nb">print</span> <span class="s2">&quot;resetting actions&quot;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">applied_actions</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:{</span><span class="n">acode</span><span class="p">:{}</span> <span class="k">for</span> <span class="n">acode</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">periods</span><span class="p">}</span>
@@ -815,6 +879,9 @@
                         <span class="n">dtype_keys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                         <span class="n">age</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                         <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compiles products from applied actions in given period. Parses string expression, which resolves to a single coefficient. Operated area can be filtered on action code, development type key list, and age. Result is product of sum of filtered area and coefficient. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">aa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_actions</span>
         <span class="k">if</span> <span class="n">acode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
@@ -863,6 +930,9 @@
         
                 
 <div class="viewcode-block" id="WoodstockModel.operated_area"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.operated_area">[docs]</a>    <span class="k">def</span> <span class="nf">operated_area</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acode</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">dtype_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compiles operated area, given action code and period (and optionally list of development type keys or age).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">aa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_actions</span>
         <span class="n">acodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">acode</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">acode</span><span class="p">]</span><span class="o">.</span><span class="n">components</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">acode</span><span class="p">]</span><span class="o">.</span><span class="n">components</span>
         <span class="n">result</span> <span class="o">=</span> <span class="mf">0.</span>
@@ -877,7 +947,7 @@
 
 <div class="viewcode-block" id="WoodstockModel.repair_actions"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.repair_actions">[docs]</a>    <span class="k">def</span> <span class="nf">repair_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">areaselector</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Attempts to repair the action schedule for given period.</span>
+<span class="sd">        Attempts to repair the action schedule for given period, using an AreaSelector object (defaults to class-default areaselector, which is a simple greedy oldest-first selector).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">areaselector</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="c1"># use default (greedy) selector</span>
             <span class="n">areaselector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">areaselector</span>
@@ -908,6 +978,10 @@
                      
         
 <div class="viewcode-block" id="WoodstockModel.commit_actions"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.commit_actions">[docs]</a>    <span class="k">def</span> <span class="nf">commit_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">repair_future_actions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Commits applied actions (i.e., apply transitions and grow, default starting at period 1).</span>
+<span class="sd">        By default, will attempt to repair broken (infeasible) future actions, attempting to replace infeasiblea operated area using default AreaSelector.  </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">while</span> <span class="n">period</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">horizon</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span> <span class="s1">&#39;growing period&#39;</span><span class="p">,</span> <span class="n">period</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grow</span><span class="p">(</span><span class="n">period</span><span class="p">,</span> <span class="n">cascade</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -929,9 +1003,12 @@
                      <span class="n">fuzzy_age</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                      <span class="n">recourse_enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                      <span class="n">areaselector</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                     <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                     <span class="n">compile_sylv_cred</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                     <span class="n">compile_harv_cost</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                     <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Applies action, given action code, development type, period, age, area.</span>
+<span class="sd">        Can optionally override operability limits, optionally use fuzzy age (i.e., attempt to apply action to proximal age class if specified age is not operable), optionally use default AreaSelector to patch missing area (if recourse enabled).</span>
+<span class="sd">        Applying an action is a rather complex process, involving testing for operability (JIT-compiling operability expression as required), checking that valid transitions are defined, checking that area is available (possibly using fuzzy age and area selector functions to find missing area), generate list of target development types (from source development type and transition expressions [which may need to be JIT-compiled]), creating new development types (as needed), doing the area accounting correctly (without creating or destroying any area), and compiling the products from the action (which gets a bit complicated in the case of partial cuts...). </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="n">area</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="c1"># stop wasting my time! :)</span>
         <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="nb">print</span> <span class="s1">&#39;applying action&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dtype_key</span><span class="p">)],</span> <span class="n">acode</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">area</span>
@@ -1087,6 +1164,10 @@
                 <span class="n">aa</span><span class="p">[</span><span class="n">dtype_key</span><span class="p">][</span><span class="n">age</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">yname</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
 <div class="viewcode-block" id="WoodstockModel.sylv_cred_formula"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.sylv_cred_formula">[docs]</a>    <span class="k">def</span> <span class="nf">sylv_cred_formula</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">treatment_type</span><span class="p">,</span> <span class="n">cover_type</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Select correct sylviculture credit formula, given treatment type and cover type.</span>
+<span class="sd">        .. warning:: This only works for Quebec!</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">treatment_type</span> <span class="o">==</span> <span class="s1">&#39;ec&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">cover_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">2</span>
         <span class="k">if</span> <span class="n">treatment_type</span> <span class="o">==</span> <span class="s1">&#39;cj&#39;</span><span class="p">:</span>
@@ -1097,6 +1178,10 @@
 
             
 <div class="viewcode-block" id="WoodstockModel.create_dtype_fromkey"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.create_dtype_fromkey">[docs]</a>    <span class="k">def</span> <span class="nf">create_dtype_fromkey</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new development type, given a key (checks for existing, auto-assigns yield compompontents, auto-assign actions and transitions, checks for operability (filed under inoperable if applicable).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
         <span class="k">assert</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtypes</span> <span class="c1"># should not be creating new dtypes from existing key</span>
         <span class="n">dt</span> <span class="o">=</span> <span class="n">DevelopmentType</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dtypes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">dt</span>
@@ -1224,12 +1309,18 @@
         
     <span class="nd">@timed</span>
     <span class="k">def</span> <span class="nf">import_outputs_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_suffix</span><span class="o">=</span><span class="s1">&#39;out&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Imports OUTPUTS section from a Woodstock model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span> <span class="n">filename_suffix</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_outputs_buffer</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
             
     <span class="nd">@timed</span>
     <span class="k">def</span> <span class="nf">import_landscape_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_suffix</span><span class="o">=</span><span class="s1">&#39;lan&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Imports LANDSCAPE section from a Woodstock model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span> <span class="n">filename_suffix</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
         <span class="n">_data</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\*THEME.*&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="o">|</span><span class="n">re</span><span class="o">.</span><span class="n">S</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># strip leading junk</span>
@@ -1254,10 +1345,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">nthemes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_themes</span><span class="p">)</span>
 
 <div class="viewcode-block" id="WoodstockModel.theme_basecodes"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.theme_basecodes">[docs]</a>    <span class="k">def</span> <span class="nf">theme_basecodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theme_index</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return list of base codes, given theme index.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_themes</span><span class="p">[</span><span class="n">theme_index</span><span class="p">]</span></div>
         
     <span class="nd">@timed</span>    
     <span class="k">def</span> <span class="nf">import_areas_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_suffix</span><span class="o">=</span><span class="s1">&#39;are&#39;</span><span class="p">,</span> <span class="n">import_empty</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Imports AREAS section from a Woodstock model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nthemes</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span> <span class="n">filename_suffix</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
@@ -1317,6 +1414,10 @@
 
     <span class="nd">@timed</span>                            
     <span class="k">def</span> <span class="nf">import_constants_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_suffix</span><span class="o">=</span><span class="s1">&#39;con&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Imports CONSTANTS section from a Woodstock model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span> <span class="n">filename_suffix</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">lnum</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s1">&#39;^\s*(;|$)&#39;</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span> <span class="k">continue</span> <span class="c1"># skip comments and blank lines</span>
@@ -1326,6 +1427,9 @@
 
     <span class="nd">@timed</span>        
     <span class="k">def</span> <span class="nf">import_yields_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_suffix</span><span class="o">=</span><span class="s1">&#39;yld&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Imports YIELDS section from a Woodstock model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1">###################################################</span>
         <span class="c1"># local utility functions #########################</span>
         <span class="k">def</span> <span class="nf">flush_ycomps</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
@@ -1411,6 +1515,10 @@
 
     <span class="nd">@timed</span>        
     <span class="k">def</span> <span class="nf">import_actions_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_suffix</span><span class="o">=</span><span class="s1">&#39;act&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Imports ACTIONS section from a Woodstock model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nthemes</span>
         <span class="n">actions</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="c1">#oper = {}</span>
@@ -1468,6 +1576,9 @@
         <span class="k">assert</span> <span class="kc">False</span> <span class="c1"># brick wall (not implemented yet)</span></div>
 
 <div class="viewcode-block" id="WoodstockModel.resolve_tmask"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.resolve_tmask">[docs]</a>    <span class="k">def</span> <span class="nf">resolve_tmask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">tmask</span><span class="p">,</span> <span class="n">treplace</span><span class="p">,</span> <span class="n">tappend</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns new developement type key (tuple of values, one per theme), given developement type and (treplace, tappend) expressions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">key</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">treplace</span><span class="p">:</span>
             <span class="n">key</span><span class="p">[</span><span class="n">treplace</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">resolve_treplace</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">treplace</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -1499,6 +1610,9 @@
         
     <span class="nd">@timed</span>                        
     <span class="k">def</span> <span class="nf">import_transitions_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_suffix</span><span class="o">=</span><span class="s1">&#39;trn&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Imports TRANSITIONS section from a Woodstock model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># local utility function ####################################</span>
         <span class="k">def</span> <span class="nf">flush_transitions</span><span class="p">(</span><span class="n">acode</span><span class="p">,</span> <span class="n">sources</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">acode</span><span class="p">:</span> <span class="k">return</span> <span class="c1"># nothing to flush on first loop</span>
@@ -1578,18 +1692,33 @@
 
     
 <div class="viewcode-block" id="WoodstockModel.import_optimize_section"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.import_optimize_section">[docs]</a>    <span class="k">def</span> <span class="nf">import_optimize_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_suffix</span><span class="o">=</span><span class="s1">&#39;opt&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Imports OPTIMIZE section from a Woodstock model.</span>
+<span class="sd">        .. warning:: Not implemented yet.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="WoodstockModel.import_graphics_section"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.import_graphics_section">[docs]</a>    <span class="k">def</span> <span class="nf">import_graphics_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_suffix</span><span class="o">=</span><span class="s1">&#39;gra&#39;</span><span class="p">):</span>
-        <span class="k">pass</span></div>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Imports GRAPHICS section from a Woodstock model.</span>
+<span class="sd">        .. warning:: Not implemented yet.</span>
 
-    <span class="k">def</span> <span class="nf">import_lifespan_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_suffix</span><span class="o">=</span><span class="s1">&#39;lif&#39;</span><span class="p">):</span>
-        <span class="k">pass</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="WoodstockModel.import_lifespan_section"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.import_lifespan_section">[docs]</a>    <span class="k">def</span> <span class="nf">import_lifespan_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_suffix</span><span class="o">=</span><span class="s1">&#39;lif&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Imports LIFESPAN section from a Woodstock model.</span>
+<span class="sd">        .. warning:: Not implemented yet.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
+
 <div class="viewcode-block" id="WoodstockModel.import_schedule_section"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.import_schedule_section">[docs]</a>    <span class="k">def</span> <span class="nf">import_schedule_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_suffix</span><span class="o">=</span><span class="s1">&#39;seq&#39;</span><span class="p">,</span> <span class="n">replace_commas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">filename_prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Imports SCHEDULE section from a Woodstock model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">filename_prefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="k">if</span> <span class="n">filename_prefix</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">filename_prefix</span>
         <span class="n">schedule</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nthemes</span>
@@ -1636,9 +1765,16 @@
             <span class="n">_period</span> <span class="o">=</span> <span class="n">period</span></div>
 
 <div class="viewcode-block" id="WoodstockModel.import_control_section"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.import_control_section">[docs]</a>    <span class="k">def</span> <span class="nf">import_control_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_suffix</span><span class="o">=</span><span class="s1">&#39;run&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Imports CONTROL section from a Woodstock model.</span>
+<span class="sd">        .. warning:: Not implemented yet.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="WoodstockModel.grow"><a class="viewcode-back" href="../../ws3.html#ws3.woodstock.WoodstockModel.grow">[docs]</a>    <span class="k">def</span> <span class="nf">grow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_period</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cascade</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simulates growth (default startint at period 1 and cascading to the end of the planning horizon).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">dt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtypes</span><span class="o">.</span><span class="n">values</span><span class="p">():</span> <span class="n">dt</span><span class="o">.</span><span class="n">grow</span><span class="p">(</span><span class="n">start_period</span><span class="p">,</span> <span class="n">cascade</span><span class="p">)</span></div></div>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
