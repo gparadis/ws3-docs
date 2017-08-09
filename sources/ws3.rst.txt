@@ -12,14 +12,6 @@ ws3\.common module
     :undoc-members:
     :show-inheritance:
 
-ws3\.conf module
-----------------
-
-.. automodule:: ws3.conf
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 ws3\.core module
 ----------------
 
