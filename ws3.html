@@ -1,0 +1,583 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ws3 package &#8212; ws3 0.1 documentation</title>
+    <link rel="stylesheet" href="static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="ws3-package">
+<h1>ws3 package<a class="headerlink" href="#ws3-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ws3.common">
+<span id="ws3-common-module"></span><h2>ws3.common module<a class="headerlink" href="#module-ws3.common" title="Permalink to this headline">¶</a></h2>
+<p>This module contains definitions for global attributes, functions, and classes that might be used anywhere in the package.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd>HORIZON_DEFAULT (int): Default value for ‘’.
+PERIOD_LENGTH_DEFAULT (int): Default number of years per period.
+MIN_AGE_DEFAULT (int): Default value for <cite>core.Curve.xmin</cite>.
+MAX_AGE_DEFAULT (int): Default value for <cite>core.Curve.xmax</cite>.
+CURVE_EPSILON_DEFAULT (float): Defalut value for <cite>core.Curve.epsilon</cite>.</dd>
+</dl>
+<p>AREA_EPSILON_DEFAULT = 0.01</p>
+<dl class="function">
+<dt id="ws3.common.harv_cost">
+<code class="descclassname">ws3.common.</code><code class="descname">harv_cost</code><span class="sig-paren">(</span><em>piece_size</em>, <em>is_finalcut</em>, <em>is_toleranthw</em>, <em>partialcut_extracare=False</em>, <em>A=1.97</em>, <em>B=0.405</em>, <em>C=0.169</em>, <em>D=0.164</em>, <em>E=0.202</em>, <em>F=13.6</em>, <em>G=8.83</em>, <em>K=0.0</em>, <em>rv=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/common.html#harv_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.common.harv_cost" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ws3.common.harv_cost_rv">
+<code class="descclassname">ws3.common.</code><code class="descname">harv_cost_rv</code><span class="sig-paren">(</span><em>tv_mu</em>, <em>tv_sigma</em>, <em>N_mu</em>, <em>N_sigma</em>, <em>psr</em>, <em>is_finalcut</em>, <em>is_toleranthw</em>, <em>partialcut_extracare=False</em>, <em>tv_min=50.0</em>, <em>N_min=200.0</em>, <em>ps_min=0.05</em>, <em>E_fromintegral=False</em>, <em>e=0.01</em>, <em>n=1000</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/common.html#harv_cost_rv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.common.harv_cost_rv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ws3.common.harv_cost_wec">
+<code class="descclassname">ws3.common.</code><code class="descname">harv_cost_wec</code><span class="sig-paren">(</span><em>piece_size</em>, <em>is_finalcut</em>, <em>is_toleranthw</em>, <em>sigma</em>, <em>nsigmas=3</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/common.html#harv_cost_wec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.common.harv_cost_wec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate harvest cost with error correction.
+:float piece_size: mean piece size
+:bool is_finalcut: True if harvest treatment is final cut, False otherwise
+:bool is_toleranthw: True if tolerant hardwood cover type, False otherwise
+:float sigma: standard deviation of piece size estimator
+:int nsigmas: number of standard deviations to model on either side of the mean (default 3)
+:float binw: width of bins for weighted numerical integration, in multiples of sigma (default 1.0)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ws3.common.is_num">
+<code class="descclassname">ws3.common.</code><code class="descname">is_num</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/common.html#is_num"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.common.is_num" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ws3.common.piece_size_ratio">
+<code class="descclassname">ws3.common.</code><code class="descname">piece_size_ratio</code><span class="sig-paren">(</span><em>treatment_type</em>, <em>cover_type</em>, <em>piece_size_ratios</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/common.html#piece_size_ratio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.common.piece_size_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assume Action.is_harvest in [0, 1, 2, 3]
+Assume cover_type in [‘r’, ‘m’, ‘f’]
+Return vr/vp ratio, where</p>
+<blockquote>
+<div>vr is mean piece size of harvested stems, and
+vp is mean piece size of stand before harvesting.</div></blockquote>
+</dd></dl>
+
+<dl class="class">
+<dt id="ws3.common.rvquot_gen">
+<em class="property">class </em><code class="descclassname">ws3.common.</code><code class="descname">rvquot_gen</code><span class="sig-paren">(</span><em>locn</em>, <em>scalen</em>, <em>locd</em>, <em>scaled</em>, <em>a=0.0</em>, <em>b=1.0</em>, <em>name='rvquot'</em>, <em>loc=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/common.html#rvquot_gen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.common.rvquot_gen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">scipy.stats._distn_infrastructure.rv_continuous</span></code></p>
+<dl class="method">
+<dt id="ws3.common.rvquot_gen.f">
+<code class="descname">f</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/common.html#rvquot_gen.f"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.common.rvquot_gen.f" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="ws3.common.sylv_cred">
+<code class="descclassname">ws3.common.</code><code class="descname">sylv_cred</code><span class="sig-paren">(</span><em>P</em>, <em>vr</em>, <em>vp</em>, <em>formula</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/common.html#sylv_cred"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.common.sylv_cred" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ws3.common.sylv_cred_formula">
+<code class="descclassname">ws3.common.</code><code class="descname">sylv_cred_formula</code><span class="sig-paren">(</span><em>treatment_type</em>, <em>cover_type</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/common.html#sylv_cred_formula"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.common.sylv_cred_formula" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ws3.common.sylv_cred_rv">
+<code class="descclassname">ws3.common.</code><code class="descname">sylv_cred_rv</code><span class="sig-paren">(</span><em>P_mu</em>, <em>P_sigma</em>, <em>tv_mu</em>, <em>tv_sigma</em>, <em>N_mu</em>, <em>N_sigma</em>, <em>psr</em>, <em>treatment_type=None</em>, <em>cover_type=None</em>, <em>formula=None</em>, <em>P_min=20.0</em>, <em>tv_min=50.0</em>, <em>N_min=200.0</em>, <em>ps_min=0.05</em>, <em>E_fromintegral=False</em>, <em>e=0.01</em>, <em>n=1000</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/common.html#sylv_cred_rv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.common.sylv_cred_rv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ws3.common.timed">
+<code class="descclassname">ws3.common.</code><code class="descname">timed</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/common.html#timed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.common.timed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ws3-conf-module">
+<h2>ws3.conf module<a class="headerlink" href="#ws3-conf-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ws3.core">
+<span id="ws3-core-module"></span><h2>ws3.core module<a class="headerlink" href="#module-ws3.core" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ws3.core.Curve">
+<em class="property">class </em><code class="descclassname">ws3.core.</code><code class="descname">Curve</code><span class="sig-paren">(</span><em>label=None</em>, <em>id=None</em>, <em>is_volume=False</em>, <em>points=None</em>, <em>type='a'</em>, <em>is_special=False</em>, <em>period_length=5</em>, <em>xmin=0</em>, <em>xmax=100</em>, <em>epsilon=0.01</em>, <em>simplify=True</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/core.html#Curve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.core.Curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Describes change in state over time (between treatments)</p>
+<dl class="method">
+<dt id="ws3.core.Curve.add_points">
+<code class="descname">add_points</code><span class="sig-paren">(</span><em>points</em>, <em>simplify=True</em>, <em>compile_y=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/core.html#Curve.add_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.core.Curve.add_points" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.core.Curve.cai">
+<code class="descname">cai</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/core.html#Curve.cai"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.core.Curve.cai" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.core.Curve.lookup">
+<code class="descname">lookup</code><span class="sig-paren">(</span><em>y</em>, <em>from_right=False</em>, <em>roundx=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/core.html#Curve.lookup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.core.Curve.lookup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.core.Curve.mai">
+<code class="descname">mai</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/core.html#Curve.mai"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.core.Curve.mai" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.core.Curve.points">
+<code class="descname">points</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/core.html#Curve.points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.core.Curve.points" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.core.Curve.range">
+<code class="descname">range</code><span class="sig-paren">(</span><em>lo=None</em>, <em>hi=None</em>, <em>as_bounds=False</em>, <em>left_range=True</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/core.html#Curve.range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.core.Curve.range" title="Permalink to this definition">¶</a></dt>
+<dd><p>left_range True:  ub lookup from left (default)
+left_range False: ub lookup from right (widest possible range)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ws3.core.Curve.simplify">
+<code class="descname">simplify</code><span class="sig-paren">(</span><em>points=None</em>, <em>autotune=True</em>, <em>compile_y=False</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/core.html#Curve.simplify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.core.Curve.simplify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.core.Curve.y">
+<code class="descname">y</code><span class="sig-paren">(</span><em>compile_y=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/core.html#Curve.y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.core.Curve.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.core.Curve.ytp">
+<code class="descname">ytp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/core.html#Curve.ytp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.core.Curve.ytp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ws3.core.Interpolator">
+<em class="property">class </em><code class="descclassname">ws3.core.</code><code class="descname">Interpolator</code><span class="sig-paren">(</span><em>points</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/core.html#Interpolator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.core.Interpolator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Interpolates x and y values from sparse curve point list.</p>
+<dl class="method">
+<dt id="ws3.core.Interpolator.lookup">
+<code class="descname">lookup</code><span class="sig-paren">(</span><em>y</em>, <em>from_right=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/core.html#Interpolator.lookup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.core.Interpolator.lookup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.core.Interpolator.points">
+<code class="descname">points</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/core.html#Interpolator.points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.core.Interpolator.points" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ws3.util">
+<span id="ws3-util-module"></span><h2>ws3.util module<a class="headerlink" href="#module-ws3.util" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="ws3.util.is_num">
+<code class="descclassname">ws3.util.</code><code class="descname">is_num</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/util.html#is_num"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.util.is_num" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-ws3.woodstock">
+<span id="ws3-woodstock-module"></span><h2>ws3.woodstock module<a class="headerlink" href="#module-ws3.woodstock" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ws3.woodstock.Action">
+<em class="property">class </em><code class="descclassname">ws3.woodstock.</code><code class="descname">Action</code><span class="sig-paren">(</span><em>code</em>, <em>targetage=None</em>, <em>descr=''</em>, <em>lockexempt=False</em>, <em>components=None</em>, <em>partial=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#Action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.Action" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="ws3.woodstock.DevelopmentType">
+<em class="property">class </em><code class="descclassname">ws3.woodstock.</code><code class="descname">DevelopmentType</code><span class="sig-paren">(</span><em>key</em>, <em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encapsulates Woodstock development type (curves, age, area).</p>
+<dl class="method">
+<dt id="ws3.woodstock.DevelopmentType.add_ycomp">
+<code class="descname">add_ycomp</code><span class="sig-paren">(</span><em>ytype</em>, <em>yname</em>, <em>ycomp</em>, <em>first_match=True</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.add_ycomp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.add_ycomp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.DevelopmentType.area">
+<code class="descname">area</code><span class="sig-paren">(</span><em>period</em>, <em>age=None</em>, <em>area=None</em>, <em>delta=True</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.area" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.DevelopmentType.compile_action">
+<code class="descname">compile_action</code><span class="sig-paren">(</span><em>acode</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.compile_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.compile_action" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.DevelopmentType.compile_actions">
+<code class="descname">compile_actions</code><span class="sig-paren">(</span><em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.compile_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.compile_actions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.DevelopmentType.grow">
+<code class="descname">grow</code><span class="sig-paren">(</span><em>start_period=1</em>, <em>cascade=True</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.grow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.grow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.DevelopmentType.initialize_areas">
+<code class="descname">initialize_areas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.initialize_areas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.initialize_areas" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.DevelopmentType.is_operable">
+<code class="descname">is_operable</code><span class="sig-paren">(</span><em>acode</em>, <em>period</em>, <em>age=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.is_operable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.is_operable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test hypothetical operability.
+Does not imply that there is any operable area in current inventory.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.DevelopmentType.operable_ages">
+<code class="descname">operable_ages</code><span class="sig-paren">(</span><em>acode</em>, <em>period</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.operable_ages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.operable_ages" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.DevelopmentType.operable_area">
+<code class="descname">operable_area</code><span class="sig-paren">(</span><em>acode</em>, <em>period</em>, <em>age=None</em>, <em>cleanup=True</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.operable_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.operable_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns 0. if inoperable or no current inventory.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.DevelopmentType.reset_areas">
+<code class="descname">reset_areas</code><span class="sig-paren">(</span><em>period=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.reset_areas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.reset_areas" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.DevelopmentType.resolve_condition">
+<code class="descname">resolve_condition</code><span class="sig-paren">(</span><em>yname</em>, <em>lo</em>, <em>hi</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.resolve_condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.resolve_condition" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.DevelopmentType.ycomp">
+<code class="descname">ycomp</code><span class="sig-paren">(</span><em>yname</em>, <em>silent_fail=True</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.ycomp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.ycomp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.DevelopmentType.ycomps">
+<code class="descname">ycomps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#DevelopmentType.ycomps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.DevelopmentType.ycomps" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ws3.woodstock.GreedyAreaSelector">
+<em class="property">class </em><code class="descclassname">ws3.woodstock.</code><code class="descname">GreedyAreaSelector</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#GreedyAreaSelector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.GreedyAreaSelector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects area for treatment from oldest age classes.</p>
+<dl class="method">
+<dt id="ws3.woodstock.GreedyAreaSelector.operate">
+<code class="descname">operate</code><span class="sig-paren">(</span><em>period</em>, <em>acode</em>, <em>target_area</em>, <em>mask=None</em>, <em>commit_actions=True</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#GreedyAreaSelector.operate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.GreedyAreaSelector.operate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Greedily operate on oldest operable age classes.
+Return missing area.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ws3.woodstock.Output">
+<em class="property">class </em><code class="descclassname">ws3.woodstock.</code><code class="descname">Output</code><span class="sig-paren">(</span><em>parent</em>, <em>code=None</em>, <em>expression=None</em>, <em>factor=(1.0</em>, <em>1)</em>, <em>description=''</em>, <em>theme_index=-1</em>, <em>is_basic=False</em>, <em>is_level=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#Output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.Output" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="ws3.woodstock.WoodstockModel">
+<em class="property">class </em><code class="descclassname">ws3.woodstock.</code><code class="descname">WoodstockModel</code><span class="sig-paren">(</span><em>model_name</em>, <em>model_path</em>, <em>horizon=30</em>, <em>period_length=5</em>, <em>max_age=100</em>, <em>area_epsilon=0.01</em>, <em>curve_epsilon=0.01</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface to import Woodstock models.</p>
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.age_class_distribution">
+<code class="descname">age_class_distribution</code><span class="sig-paren">(</span><em>period</em>, <em>mask=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.age_class_distribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.age_class_distribution" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.apply_action">
+<code class="descname">apply_action</code><span class="sig-paren">(</span><em>dtype_key</em>, <em>acode</em>, <em>period</em>, <em>age</em>, <em>area</em>, <em>override_operability=False</em>, <em>fuzzy_age=True</em>, <em>recourse_enabled=True</em>, <em>areaselector=None</em>, <em>verbose=False</em>, <em>compile_sylv_cred=True</em>, <em>compile_harv_cost=True</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.apply_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.apply_action" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.apply_schedule">
+<code class="descname">apply_schedule</code><span class="sig-paren">(</span><em>schedule</em>, <em>max_period=None</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.apply_schedule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.apply_schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assumes schedule in format returned by import_schedule_section().
+That is: list of (dtype_key, age, area, acode, period, condition) tuples.
+Also assumes that actions in list are sorted by applied period.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.commit_actions">
+<code class="descname">commit_actions</code><span class="sig-paren">(</span><em>period=1</em>, <em>repair_future_actions=False</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.commit_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.commit_actions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.compile_product">
+<code class="descname">compile_product</code><span class="sig-paren">(</span><em>period</em>, <em>expr</em>, <em>acode=None</em>, <em>dtype_keys=None</em>, <em>age=None</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.compile_product"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.compile_product" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.create_dtype_fromkey">
+<code class="descname">create_dtype_fromkey</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.create_dtype_fromkey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.create_dtype_fromkey" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.dt">
+<code class="descname">dt</code><span class="sig-paren">(</span><em>dtype_key</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.dt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.dt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.grow">
+<code class="descname">grow</code><span class="sig-paren">(</span><em>start_period=1</em>, <em>cascade=True</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.grow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.grow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.import_actions_section">
+<code class="descname">import_actions_section</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#ws3.woodstock.WoodstockModel.import_actions_section" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.import_areas_section">
+<code class="descname">import_areas_section</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#ws3.woodstock.WoodstockModel.import_areas_section" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.import_constants_section">
+<code class="descname">import_constants_section</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#ws3.woodstock.WoodstockModel.import_constants_section" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.import_control_section">
+<code class="descname">import_control_section</code><span class="sig-paren">(</span><em>filename_suffix='run'</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.import_control_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.import_control_section" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.import_graphics_section">
+<code class="descname">import_graphics_section</code><span class="sig-paren">(</span><em>filename_suffix='gra'</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.import_graphics_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.import_graphics_section" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.import_landscape_section">
+<code class="descname">import_landscape_section</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#ws3.woodstock.WoodstockModel.import_landscape_section" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.import_lifespan_section">
+<code class="descname">import_lifespan_section</code><span class="sig-paren">(</span><em>filename_suffix='lif'</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.import_lifespan_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.import_lifespan_section" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.import_optimize_section">
+<code class="descname">import_optimize_section</code><span class="sig-paren">(</span><em>filename_suffix='opt'</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.import_optimize_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.import_optimize_section" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.import_outputs_section">
+<code class="descname">import_outputs_section</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#ws3.woodstock.WoodstockModel.import_outputs_section" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.import_schedule_section">
+<code class="descname">import_schedule_section</code><span class="sig-paren">(</span><em>filename_suffix='seq'</em>, <em>replace_commas=True</em>, <em>filename_prefix=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.import_schedule_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.import_schedule_section" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.import_transitions_section">
+<code class="descname">import_transitions_section</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#ws3.woodstock.WoodstockModel.import_transitions_section" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.import_yields_section">
+<code class="descname">import_yields_section</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#ws3.woodstock.WoodstockModel.import_yields_section" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.initialize_areas">
+<code class="descname">initialize_areas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.initialize_areas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.initialize_areas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copies areas from period 0 to period 1.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.inventory">
+<code class="descname">inventory</code><span class="sig-paren">(</span><em>period</em>, <em>yname=None</em>, <em>age=None</em>, <em>mask=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.inventory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.inventory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.is_harvest">
+<code class="descname">is_harvest</code><span class="sig-paren">(</span><em>acode</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.is_harvest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.is_harvest" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.match_mask">
+<code class="descname">match_mask</code><span class="sig-paren">(</span><em>mask</em>, <em>key</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.match_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.match_mask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if key matches mask.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.operable_area">
+<code class="descname">operable_area</code><span class="sig-paren">(</span><em>acode</em>, <em>period</em>, <em>age=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.operable_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.operable_area" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.operable_dtypes">
+<code class="descname">operable_dtypes</code><span class="sig-paren">(</span><em>acode</em>, <em>period</em>, <em>mask=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.operable_dtypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.operable_dtypes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.operated_area">
+<code class="descname">operated_area</code><span class="sig-paren">(</span><em>acode</em>, <em>period</em>, <em>dtype_key=None</em>, <em>age=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.operated_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.operated_area" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.piece_size">
+<code class="descname">piece_size</code><span class="sig-paren">(</span><em>dtype_key</em>, <em>age</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.piece_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.piece_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.register_curve">
+<code class="descname">register_curve</code><span class="sig-paren">(</span><em>curve</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.register_curve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.register_curve" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.repair_actions">
+<code class="descname">repair_actions</code><span class="sig-paren">(</span><em>period</em>, <em>areaselector=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.repair_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.repair_actions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to repair the action schedule for given period.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.reset_actions">
+<code class="descname">reset_actions</code><span class="sig-paren">(</span><em>period=None</em>, <em>acode=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.reset_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.reset_actions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.resolve_condition">
+<code class="descname">resolve_condition</code><span class="sig-paren">(</span><em>condition</em>, <em>dtype_key=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.resolve_condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.resolve_condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate &#64;AGE or &#64;YLD condition.
+Returns list of ages.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.resolve_tappend">
+<code class="descname">resolve_tappend</code><span class="sig-paren">(</span><em>dt</em>, <em>tappend</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.resolve_tappend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.resolve_tappend" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.resolve_tmask">
+<code class="descname">resolve_tmask</code><span class="sig-paren">(</span><em>dt</em>, <em>tmask</em>, <em>treplace</em>, <em>tappend</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.resolve_tmask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.resolve_tmask" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.resolve_treplace">
+<code class="descname">resolve_treplace</code><span class="sig-paren">(</span><em>dt</em>, <em>treplace</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.resolve_treplace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.resolve_treplace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.sylv_cred_formula">
+<code class="descname">sylv_cred_formula</code><span class="sig-paren">(</span><em>treatment_type</em>, <em>cover_type</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.sylv_cred_formula"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.sylv_cred_formula" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.theme_basecodes">
+<code class="descname">theme_basecodes</code><span class="sig-paren">(</span><em>theme_index</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.theme_basecodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.theme_basecodes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.tree">
+<code class="descname">tree</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ws3.woodstock.WoodstockModel.tree" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ws3.woodstock.WoodstockModel.unmask">
+<code class="descname">unmask</code><span class="sig-paren">(</span><em>mask</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ws3/woodstock.html#WoodstockModel.unmask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ws3.woodstock.WoodstockModel.unmask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iteratively filter list of development type keys using mask values.
+Accepts Woodstock-style string masks to facilitate cut-and-paste testing.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ws3">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ws3" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ws3</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Gregory Paradis.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="sources/ws3.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

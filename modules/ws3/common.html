@@ -1,0 +1,641 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ws3.common &#8212; ws3 0.1 documentation</title>
+    <link rel="stylesheet" href="../../static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ws3.common</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains definitions for global attributes, functions, and classes that might be used anywhere in the package.</span>
+
+<span class="sd">Attributes:</span>
+<span class="sd">    HORIZON_DEFAULT (int): Default value for &#39;&#39;.</span>
+<span class="sd">    PERIOD_LENGTH_DEFAULT (int): Default number of years per period.</span>
+<span class="sd">    MIN_AGE_DEFAULT (int): Default value for `core.Curve.xmin`.</span>
+<span class="sd">    MAX_AGE_DEFAULT (int): Default value for `core.Curve.xmax`.</span>
+<span class="sd">    CURVE_EPSILON_DEFAULT (float): Defalut value for `core.Curve.epsilon`.</span>
+<span class="sd">AREA_EPSILON_DEFAULT = 0.01</span>
+<span class="sd">    </span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pacal</span>
+
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">cPickle</span> <span class="k">as</span> <span class="nn">pickle</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="c1">#from math import exp, log</span>
+
+
+<div class="viewcode-block" id="timed"><a class="viewcode-back" href="../../ws3.html#ws3.common.timed">[docs]</a><span class="k">def</span> <span class="nf">timed</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span>
+        <span class="nb">print</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> took </span><span class="si">%.3f</span><span class="s1"> seconds.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">func_name</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="k">return</span> <span class="n">wrapper</span></div>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">norm</span>
+
+<span class="n">HORIZON_DEFAULT</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">PERIOD_LENGTH_DEFAULT</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">MIN_AGE_DEFAULT</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">MAX_AGE_DEFAULT</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">CURVE_EPSILON_DEFAULT</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">AREA_EPSILON_DEFAULT</span> <span class="o">=</span> <span class="mf">0.01</span>
+
+<span class="c1">##################################################</span>
+<span class="c1"># not used (delete) [commenting out]</span>
+<span class="n">SPECIES_GROUPS_QC</span>  <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;ERR&#39;</span><span class="p">:</span><span class="s1">&#39;ERR&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ERS&#39;</span><span class="p">:</span><span class="s1">&#39;ERS&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;BOP&#39;</span><span class="p">:</span><span class="s1">&#39;BOP&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;EPR&#39;</span><span class="p">:</span><span class="s1">&#39;SEP&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;CHB&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;EPN&#39;</span><span class="p">:</span><span class="s1">&#39;SEP&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;EPO&#39;</span><span class="p">:</span><span class="s1">&#39;SEP&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;BOJ&#39;</span><span class="p">:</span><span class="s1">&#39;BOJ&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PEH&#39;</span><span class="p">:</span><span class="s1">&#39;PEU&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ERA&#39;</span><span class="p">:</span><span class="s1">&#39;ERR&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;CAC&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ERN&#39;</span><span class="p">:</span><span class="s1">&#39;ERR&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PEG&#39;</span><span class="p">:</span><span class="s1">&#39;PEU&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;EPB&#39;</span><span class="p">:</span><span class="s1">&#39;SEP&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;CAF&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PEB&#39;</span><span class="p">:</span><span class="s1">&#39;PEU&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;BOG&#39;</span><span class="p">:</span><span class="s1">&#39;BOP&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SOA&#39;</span><span class="p">:</span><span class="s1">&#39;NCO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SAL&#39;</span><span class="p">:</span><span class="s1">&#39;NCO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SAB&#39;</span><span class="p">:</span><span class="s1">&#39;SAB&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PIB&#39;</span><span class="p">:</span><span class="s1">&#39;PIN&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PIG&#39;</span><span class="p">:</span><span class="s1">&#39;SEP&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PRU&#39;</span><span class="p">:</span><span class="s1">&#39;AUR&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PET&#39;</span><span class="p">:</span><span class="s1">&#39;PEU&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;CET&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PRP&#39;</span><span class="p">:</span><span class="s1">&#39;NCO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PIR&#39;</span><span class="p">:</span><span class="s1">&#39;PIN&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PIS&#39;</span><span class="p">:</span><span class="s1">&#39;SEP&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PED&#39;</span><span class="p">:</span><span class="s1">&#39;PEU&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;FRA&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;CHE&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;CHG&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;FRN&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;THO&#39;</span><span class="p">:</span><span class="s1">&#39;AUR&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;CHR&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;FRP&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;TIL&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;MEL&#39;</span><span class="p">:</span><span class="s1">&#39;AUR&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ORT&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ORR&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;MEH&#39;</span><span class="p">:</span><span class="s1">&#39;AUR&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;NOC&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;HEG&#39;</span><span class="p">:</span><span class="s1">&#39;HEG&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;OSV&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ORA&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span>
+<span class="p">}</span>
+
+<span class="c1">##################################################</span>
+<span class="c1"># not used (delete) [commenting out]</span>
+<span class="n">SPECIES_GROUPS_WOODSTOCK_QC</span>  <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;ERR&#39;</span><span class="p">:</span><span class="s1">&#39;ERR&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ERS&#39;</span><span class="p">:</span><span class="s1">&#39;ERS&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;BOP&#39;</span><span class="p">:</span><span class="s1">&#39;BOP&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;EPR&#39;</span><span class="p">:</span><span class="s1">&#39;SEP&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;CHB&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;EPN&#39;</span><span class="p">:</span><span class="s1">&#39;SEP&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;EPO&#39;</span><span class="p">:</span><span class="s1">&#39;SEP&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;BOJ&#39;</span><span class="p">:</span><span class="s1">&#39;BOJ&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PEH&#39;</span><span class="p">:</span><span class="s1">&#39;PEU&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ERA&#39;</span><span class="p">:</span><span class="s1">&#39;ERR&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;CAC&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ERN&#39;</span><span class="p">:</span><span class="s1">&#39;ERR&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PEG&#39;</span><span class="p">:</span><span class="s1">&#39;PEU&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;EPB&#39;</span><span class="p">:</span><span class="s1">&#39;SEP&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;CAF&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PEB&#39;</span><span class="p">:</span><span class="s1">&#39;PEU&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;BOG&#39;</span><span class="p">:</span><span class="s1">&#39;BOP&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SOA&#39;</span><span class="p">:</span><span class="s1">&#39;NCO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SAL&#39;</span><span class="p">:</span><span class="s1">&#39;NCO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SAB&#39;</span><span class="p">:</span><span class="s1">&#39;SAB&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PIB&#39;</span><span class="p">:</span><span class="s1">&#39;PIN&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PIG&#39;</span><span class="p">:</span><span class="s1">&#39;SEP&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PRU&#39;</span><span class="p">:</span><span class="s1">&#39;AUR&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PET&#39;</span><span class="p">:</span><span class="s1">&#39;PEU&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;CET&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PRP&#39;</span><span class="p">:</span><span class="s1">&#39;NCO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PIR&#39;</span><span class="p">:</span><span class="s1">&#39;PIN&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PIS&#39;</span><span class="p">:</span><span class="s1">&#39;SEP&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PED&#39;</span><span class="p">:</span><span class="s1">&#39;PEU&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;FRA&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;CHE&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;CHG&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;FRN&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;THO&#39;</span><span class="p">:</span><span class="s1">&#39;AUR&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;CHR&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;FRP&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;TIL&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;MEL&#39;</span><span class="p">:</span><span class="s1">&#39;AUR&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ORT&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ORR&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;MEH&#39;</span><span class="p">:</span><span class="s1">&#39;AUR&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;NOC&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;HEG&#39;</span><span class="p">:</span><span class="s1">&#39;HEG&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;OSV&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ORA&#39;</span><span class="p">:</span><span class="s1">&#39;FTO&#39;</span>
+<span class="p">}</span>
+
+<span class="c1">##################################################</span>
+<span class="c1"># not used (delete) [commenting out]</span>
+<span class="c1">##########################################</span>
+<span class="c1"># keys correspond to bin labels</span>
+<span class="c1"># values correspond to bin upper bounds (inclusive)</span>
+<span class="c1"># AGE_CLASS_BINS_DEFAULT = {</span>
+<span class="c1">#     &#39;10&#39;:20,</span>
+<span class="c1">#     &#39;30&#39;:40,</span>
+<span class="c1">#     &#39;50&#39;:60,</span>
+<span class="c1">#     &#39;70&#39;:80,</span>
+<span class="c1">#     &#39;90&#39;:100,</span>
+<span class="c1">#     &#39;120+&#39;:MAX_AGE_DEFAULT</span>
+<span class="c1"># }</span>
+<span class="c1">##########################################</span>
+    
+
+<div class="viewcode-block" id="is_num"><a class="viewcode-back" href="../../ws3.html#ws3.common.is_num">[docs]</a><span class="k">def</span> <span class="nf">is_num</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+    
+<span class="k">def</span> <span class="nf">_sylv_cred_f1</span><span class="p">(</span><span class="n">P</span><span class="p">,</span>
+                  <span class="n">vr</span><span class="p">,</span>
+                  <span class="n">vp</span><span class="p">,</span>
+                  <span class="n">rv</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">C1a</span><span class="o">=</span><span class="mf">4.511</span><span class="p">,</span>
+                  <span class="n">C2a</span><span class="o">=-</span><span class="mf">0.628</span><span class="p">,</span>
+                  <span class="n">C7d</span><span class="o">=-</span><span class="mf">0.391</span><span class="p">,</span>
+                  <span class="n">C8d</span><span class="o">=</span><span class="mf">1.939</span><span class="p">,</span>
+                  <span class="n">C15h</span><span class="o">=</span><span class="mf">3.912</span><span class="p">,</span>
+                  <span class="n">C16h</span><span class="o">=-</span><span class="mf">0.0094</span><span class="p">,</span>
+                  <span class="n">C17i</span><span class="o">=</span><span class="mf">0.0698</span><span class="p">,</span>
+                  <span class="n">C18j</span><span class="o">=</span><span class="mf">9.2529</span><span class="p">,</span>
+                  <span class="n">Kmult</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                  <span class="n">Kplus</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+    <span class="n">exp</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">exp</span> <span class="k">if</span> <span class="n">rv</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">log</span> <span class="k">if</span> <span class="n">rv</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span>
+    <span class="n">sc</span> <span class="o">=</span> <span class="p">(</span><span class="n">C1a</span><span class="o">*</span><span class="n">vr</span><span class="o">**</span><span class="n">C2a</span><span class="o">-</span><span class="n">exp</span><span class="p">(</span><span class="n">C7d</span><span class="o">*</span><span class="n">log</span><span class="p">(</span><span class="n">vp</span><span class="p">)</span><span class="o">+</span><span class="n">C8d</span><span class="p">)</span><span class="o">+</span><span class="n">C15h</span><span class="o">*</span><span class="n">exp</span><span class="p">(</span><span class="n">C16h</span><span class="o">*</span><span class="n">P</span><span class="p">)</span><span class="o">-</span><span class="n">C17i</span><span class="o">*</span><span class="n">P</span><span class="o">+</span><span class="n">C18j</span><span class="p">)</span><span class="o">*</span><span class="n">P</span><span class="o">*</span><span class="n">Kmult</span><span class="o">+</span><span class="n">Kplus</span>
+    <span class="k">if</span> <span class="n">rv</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sc</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="c1"># expected value, given random variates</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sc</span>
+
+    
+<span class="k">def</span> <span class="nf">_sylv_cred_f2</span><span class="p">(</span><span class="n">P</span><span class="p">,</span>
+                  <span class="n">vr</span><span class="p">,</span>
+                  <span class="n">vp</span><span class="p">,</span>
+                  <span class="n">rv</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">C3b</span><span class="o">=-</span><span class="mf">0.237</span><span class="p">,</span>
+                  <span class="n">C4b</span><span class="o">=</span><span class="mf">2.592</span><span class="p">,</span>
+                  <span class="n">C7d</span><span class="o">=-</span><span class="mf">0.237</span><span class="p">,</span>
+                  <span class="n">C8d</span><span class="o">=</span><span class="mf">2.247</span><span class="p">,</span>
+                  <span class="n">C11f</span><span class="o">=</span><span class="mf">4.3546</span><span class="p">,</span>
+                  <span class="n">C12f</span><span class="o">=</span><span class="mf">0.34</span><span class="p">,</span>
+                  <span class="n">C13g</span><span class="o">=</span><span class="mf">4.3543</span><span class="p">,</span>
+                  <span class="n">C14g</span><span class="o">=</span><span class="mf">0.34</span><span class="p">,</span>
+                  <span class="n">C15h</span><span class="o">=</span><span class="mf">3.912</span><span class="p">,</span>
+                  <span class="n">C16h</span><span class="o">=-</span><span class="mf">0.0094</span><span class="p">,</span>
+                  <span class="n">C17i</span><span class="o">=</span><span class="mf">0.0698</span><span class="p">,</span>
+                  <span class="n">C18j</span><span class="o">=</span><span class="mf">7.1029</span><span class="p">,</span>
+                  <span class="n">Kmult</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                  <span class="n">Kplus</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+    <span class="n">exp</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">exp</span> <span class="k">if</span> <span class="n">rv</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">log</span> <span class="k">if</span> <span class="n">rv</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span>
+    <span class="n">sc</span> <span class="o">=</span> <span class="p">((</span><span class="n">exp</span><span class="p">(</span><span class="n">C3b</span><span class="o">*</span><span class="n">log</span><span class="p">(</span><span class="n">vr</span><span class="p">)</span><span class="o">+</span><span class="n">C4b</span><span class="p">)</span><span class="o">-</span><span class="n">exp</span><span class="p">(</span><span class="n">C7d</span><span class="o">*</span><span class="n">log</span><span class="p">(</span><span class="n">vp</span><span class="p">)</span><span class="o">+</span><span class="n">C8d</span><span class="p">)</span><span class="o">+</span><span class="n">C11f</span><span class="o">/</span><span class="n">vr</span><span class="o">**</span><span class="n">C12f</span><span class="o">-</span><span class="n">C13g</span><span class="o">/</span><span class="n">vp</span><span class="o">**</span><span class="n">C14g</span>
+           <span class="o">+</span><span class="n">C15h</span><span class="o">*</span><span class="n">exp</span><span class="p">(</span><span class="n">C16h</span><span class="o">*</span><span class="n">P</span><span class="p">)</span><span class="o">-</span><span class="n">C17i</span><span class="o">*</span><span class="n">P</span><span class="o">+</span><span class="n">C18j</span><span class="p">)</span><span class="o">*</span><span class="n">P</span><span class="o">*</span><span class="n">Kmult</span><span class="o">+</span><span class="n">Kplus</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rv</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sc</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="c1"># expected value, given random variates</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sc</span>
+
+
+<span class="k">def</span> <span class="nf">_sylv_cred_f3</span><span class="p">(</span><span class="n">P</span><span class="p">,</span>
+                  <span class="n">vr</span><span class="p">,</span>
+                  <span class="n">vp</span><span class="p">,</span>
+                  <span class="n">rv</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">C3b</span><span class="o">=-</span><span class="mf">0.237</span><span class="p">,</span>
+                  <span class="n">C4b</span><span class="o">=</span><span class="mf">2.247</span><span class="p">,</span>
+                  <span class="n">C7d</span><span class="o">=-</span><span class="mf">0.237</span><span class="p">,</span>
+                  <span class="n">C8d</span><span class="o">=</span><span class="mf">2.247</span><span class="p">,</span>
+                  <span class="n">C15h</span><span class="o">=</span><span class="mf">3.912</span><span class="p">,</span>
+                  <span class="n">C16h</span><span class="o">=-</span><span class="mf">0.0094</span><span class="p">,</span>
+                  <span class="n">C17i</span><span class="o">=</span><span class="mf">0.0698</span><span class="p">,</span>
+                  <span class="n">C18j</span><span class="o">=</span><span class="mf">7.1029</span><span class="p">,</span>
+                  <span class="n">Kmult</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                  <span class="n">Kplus</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+    <span class="n">exp</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">exp</span> <span class="k">if</span> <span class="n">rv</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">log</span> <span class="k">if</span> <span class="n">rv</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span>
+    <span class="n">sc</span> <span class="o">=</span> <span class="p">(</span><span class="n">exp</span><span class="p">(</span><span class="n">C3b</span><span class="o">*</span><span class="n">log</span><span class="p">(</span><span class="n">vr</span><span class="p">)</span><span class="o">+</span><span class="n">C4b</span><span class="p">)</span><span class="o">-</span><span class="n">exp</span><span class="p">(</span><span class="n">C7d</span><span class="o">*</span><span class="n">log</span><span class="p">(</span><span class="n">vp</span><span class="p">)</span><span class="o">+</span><span class="n">C8d</span><span class="p">)</span><span class="o">+</span><span class="n">C15h</span><span class="o">*</span><span class="n">exp</span><span class="p">(</span><span class="n">C16h</span><span class="o">*</span><span class="n">P</span><span class="p">)</span><span class="o">-</span><span class="n">C17i</span><span class="o">*</span><span class="n">P</span><span class="o">+</span><span class="n">C18j</span><span class="p">)</span><span class="o">*</span><span class="n">P</span><span class="o">*</span><span class="n">Kmult</span><span class="o">+</span><span class="n">Kplus</span>
+    <span class="k">if</span> <span class="n">rv</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sc</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="c1"># expected value, given random variates</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sc</span>
+
+
+<span class="k">def</span> <span class="nf">_sylv_cred_f4</span><span class="p">(</span><span class="n">P</span><span class="p">,</span>
+                  <span class="n">vr</span><span class="p">,</span>
+                  <span class="n">vp</span><span class="p">,</span>
+                  <span class="n">rv</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">C3b</span><span class="o">=-</span><span class="mf">0.237</span><span class="p">,</span>
+                  <span class="n">C4b</span><span class="o">=</span><span class="mf">2.592</span><span class="p">,</span>
+                  <span class="n">C7d</span><span class="o">=-</span><span class="mf">0.237</span><span class="p">,</span>
+                  <span class="n">C8d</span><span class="o">=</span><span class="mf">2.247</span><span class="p">,</span>
+                  <span class="n">C11f</span><span class="o">=</span><span class="mf">4.3546</span><span class="p">,</span>
+                  <span class="n">C12f</span><span class="o">=</span><span class="mf">0.34</span><span class="p">,</span>
+                  <span class="n">C13g</span><span class="o">=</span><span class="mf">4.3546</span><span class="p">,</span>
+                  <span class="n">C14g</span><span class="o">=</span><span class="mf">0.34</span><span class="p">,</span>
+                  <span class="n">C15h</span><span class="o">=</span><span class="mf">3.912</span><span class="p">,</span>
+                  <span class="n">C16h</span><span class="o">=-</span><span class="mf">0.0069</span><span class="p">,</span>
+                  <span class="n">C17i</span><span class="o">=</span><span class="mf">0.0517</span><span class="p">,</span>
+                  <span class="n">C18j</span><span class="o">=</span><span class="mf">7.1029</span><span class="p">,</span>
+                  <span class="n">Kmult</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                  <span class="n">Kplus</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+    <span class="n">exp</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">exp</span> <span class="k">if</span> <span class="n">rv</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">log</span> <span class="k">if</span> <span class="n">rv</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span>
+    <span class="n">sc</span> <span class="o">=</span> <span class="p">((</span><span class="n">exp</span><span class="p">(</span><span class="n">C3b</span><span class="o">*</span><span class="n">log</span><span class="p">(</span><span class="n">vr</span><span class="p">)</span><span class="o">+</span><span class="n">C4b</span><span class="p">)</span><span class="o">-</span><span class="n">exp</span><span class="p">(</span><span class="n">C7d</span><span class="o">*</span><span class="n">log</span><span class="p">(</span><span class="n">vp</span><span class="p">)</span><span class="o">+</span><span class="n">C8d</span><span class="p">)</span><span class="o">+</span><span class="n">C11f</span><span class="o">/</span><span class="n">vr</span><span class="o">**</span><span class="n">C12f</span><span class="o">-</span><span class="n">C13g</span><span class="o">/</span><span class="n">vp</span><span class="o">**</span><span class="n">C14g</span>
+           <span class="o">+</span><span class="n">C15h</span><span class="o">*</span><span class="n">exp</span><span class="p">(</span><span class="n">C16h</span><span class="o">*</span><span class="n">P</span><span class="p">)</span><span class="o">-</span><span class="n">C17i</span><span class="o">*</span><span class="n">P</span><span class="o">+</span><span class="n">C18j</span><span class="p">)</span><span class="o">*</span><span class="n">P</span><span class="o">*</span><span class="n">Kmult</span><span class="o">+</span><span class="n">Kplus</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rv</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sc</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="c1"># expected value, given random variates</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sc</span>
+
+
+<span class="k">def</span> <span class="nf">_sylv_cred_f5</span><span class="p">(</span><span class="n">P</span><span class="p">,</span>
+                  <span class="n">vr</span><span class="p">,</span>
+                  <span class="n">vp</span><span class="p">,</span>
+                  <span class="n">rv</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">C3b</span><span class="o">=-</span><span class="mf">0.237</span><span class="p">,</span>
+                  <span class="n">C4b</span><span class="o">=</span><span class="mf">2.519</span><span class="p">,</span>
+                  <span class="n">C7d</span><span class="o">=-</span><span class="mf">0.237</span><span class="p">,</span>
+                  <span class="n">C8d</span><span class="o">=</span><span class="mf">2.247</span><span class="p">,</span>
+                  <span class="n">C11f</span><span class="o">=</span><span class="mf">4.3546</span><span class="p">,</span>
+                  <span class="n">C12f</span><span class="o">=</span><span class="mf">0.34</span><span class="p">,</span>
+                  <span class="n">C13g</span><span class="o">=</span><span class="mf">4.3546</span><span class="p">,</span>
+                  <span class="n">C14g</span><span class="o">=</span><span class="mf">0.34</span><span class="p">,</span>
+                  <span class="n">C15h</span><span class="o">=</span><span class="mf">3.912</span><span class="p">,</span>
+                  <span class="n">C16h</span><span class="o">=-</span><span class="mf">0.0069</span><span class="p">,</span>
+                  <span class="n">C17i</span><span class="o">=</span><span class="mf">0.0517</span><span class="p">,</span>
+                  <span class="n">C18j</span><span class="o">=</span><span class="mf">7.1029</span><span class="p">,</span>
+                  <span class="n">Kmult</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                  <span class="n">Kplus</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+    <span class="n">exp</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">exp</span> <span class="k">if</span> <span class="n">rv</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">log</span> <span class="k">if</span> <span class="n">rv</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span>
+    <span class="n">sc</span> <span class="o">=</span> <span class="p">((</span><span class="n">exp</span><span class="p">(</span><span class="n">C3b</span><span class="o">*</span><span class="n">log</span><span class="p">(</span><span class="n">vr</span><span class="p">)</span><span class="o">+</span><span class="n">C4b</span><span class="p">)</span><span class="o">-</span><span class="n">exp</span><span class="p">(</span><span class="n">C7d</span><span class="o">*</span><span class="n">log</span><span class="p">(</span><span class="n">vp</span><span class="p">)</span><span class="o">+</span><span class="n">C8d</span><span class="p">)</span><span class="o">+</span><span class="n">C11f</span><span class="o">/</span><span class="n">vr</span><span class="o">**</span><span class="n">C12f</span><span class="o">-</span><span class="n">C13g</span><span class="o">/</span><span class="n">vp</span><span class="o">**</span><span class="n">C14g</span>
+           <span class="o">+</span><span class="n">C15h</span><span class="o">*</span><span class="n">exp</span><span class="p">(</span><span class="n">C16h</span><span class="o">*</span><span class="n">P</span><span class="p">)</span><span class="o">-</span><span class="n">C17i</span><span class="o">*</span><span class="n">P</span><span class="o">+</span><span class="n">C18j</span><span class="p">)</span><span class="o">*</span><span class="n">P</span><span class="o">*</span><span class="n">Kmult</span><span class="o">+</span><span class="n">Kplus</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rv</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sc</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="c1"># expected value, given random variates</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sc</span>
+
+
+<span class="k">def</span> <span class="nf">_sylv_cred_f6</span><span class="p">(</span><span class="n">P</span><span class="p">,</span>
+                  <span class="n">vr</span><span class="p">,</span>
+                  <span class="n">vp</span><span class="p">,</span>
+                  <span class="n">rv</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">C3b</span><span class="o">=-</span><span class="mf">0.237</span><span class="p">,</span>
+                  <span class="n">C4b</span><span class="o">=</span><span class="mf">2.519</span><span class="p">,</span>
+                  <span class="n">C5c</span><span class="o">=-</span><span class="mf">0.391</span><span class="p">,</span>
+                  <span class="n">C6c</span><span class="o">=</span><span class="mf">2.017</span><span class="p">,</span>
+                  <span class="n">C7d</span><span class="o">=-</span><span class="mf">0.237</span><span class="p">,</span>
+                  <span class="n">C8d</span><span class="o">=</span><span class="mf">2.247</span><span class="p">,</span>
+                  <span class="n">C9e</span><span class="o">=-</span><span class="mf">0.391</span><span class="p">,</span>
+                  <span class="n">C10e</span><span class="o">=</span><span class="mf">1.939</span><span class="p">,</span>
+                  <span class="n">C11f</span><span class="o">=</span><span class="mf">4.3546</span><span class="p">,</span>
+                  <span class="n">C12f</span><span class="o">=</span><span class="mf">0.34</span><span class="p">,</span>
+                  <span class="n">C13g</span><span class="o">=</span><span class="mf">4.3546</span><span class="p">,</span>
+                  <span class="n">C14g</span><span class="o">=</span><span class="mf">0.34</span><span class="p">,</span>
+                  <span class="n">C15h</span><span class="o">=</span><span class="mf">3.912</span><span class="p">,</span>
+                  <span class="n">C16h</span><span class="o">=-</span><span class="mf">0.0069</span><span class="p">,</span>
+                  <span class="n">C17i</span><span class="o">=</span><span class="mf">0.0517</span><span class="p">,</span>
+                  <span class="n">C18j</span><span class="o">=</span><span class="mf">7.1029</span><span class="p">,</span>
+                  <span class="n">Kmult</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                  <span class="n">Kplus</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+    <span class="n">exp</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">exp</span> <span class="k">if</span> <span class="n">rv</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">log</span> <span class="k">if</span> <span class="n">rv</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span>
+    <span class="n">sc</span> <span class="o">=</span> <span class="p">(((</span><span class="n">exp</span><span class="p">(</span><span class="n">C3b</span><span class="o">*</span><span class="n">log</span><span class="p">(</span><span class="n">vr</span><span class="p">)</span><span class="o">+</span><span class="n">C4b</span><span class="p">)</span><span class="o">+</span><span class="n">exp</span><span class="p">(</span><span class="n">C5c</span><span class="o">*</span><span class="n">log</span><span class="p">(</span><span class="n">vr</span><span class="p">)</span><span class="o">+</span><span class="n">C6c</span><span class="p">)</span><span class="o">-</span><span class="n">exp</span><span class="p">(</span><span class="n">C7d</span><span class="o">*</span><span class="n">log</span><span class="p">(</span><span class="n">vp</span><span class="p">)</span><span class="o">+</span><span class="n">C8d</span><span class="p">)</span><span class="o">-</span><span class="n">exp</span><span class="p">(</span><span class="n">C9e</span><span class="o">*</span><span class="n">log</span><span class="p">(</span><span class="n">vp</span><span class="p">)</span><span class="o">+</span><span class="n">C10e</span><span class="p">))</span><span class="o">/</span><span class="mi">2</span>
+            <span class="o">+</span><span class="n">C11f</span><span class="o">/</span><span class="n">vr</span><span class="o">**</span><span class="n">C12f</span><span class="o">-</span><span class="n">C13g</span><span class="o">/</span><span class="n">vp</span><span class="o">**</span><span class="n">C14g</span><span class="o">+</span><span class="n">C15h</span><span class="o">*</span><span class="n">exp</span><span class="p">(</span><span class="n">C16h</span><span class="o">*</span><span class="n">P</span><span class="p">)</span><span class="o">-</span><span class="n">C17i</span><span class="o">*</span><span class="n">P</span><span class="o">+</span><span class="n">C18j</span><span class="o">*</span><span class="n">P</span><span class="p">)</span><span class="o">*</span><span class="n">Kmult</span><span class="o">+</span><span class="n">Kplus</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rv</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sc</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="c1"># expected value, given random variates</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sc</span>
+
+
+<span class="k">def</span> <span class="nf">_sylv_cred_f7</span><span class="p">(</span><span class="n">P</span><span class="p">,</span>
+                  <span class="n">vr</span><span class="p">,</span>
+                  <span class="n">vp</span><span class="p">,</span>
+                  <span class="n">rv</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">C3b</span><span class="o">=-</span><span class="mf">0.391</span><span class="p">,</span>
+                  <span class="n">C4b</span><span class="o">=</span><span class="mf">2.2</span><span class="p">,</span>
+                  <span class="n">C7d</span><span class="o">=-</span><span class="mf">0.391</span><span class="p">,</span>
+                  <span class="n">C8d</span><span class="o">=</span><span class="mf">1.939</span><span class="p">,</span>
+                  <span class="n">C15h</span><span class="o">=</span><span class="mf">3.912</span><span class="p">,</span>
+                  <span class="n">C16h</span><span class="o">=-</span><span class="mf">0.0069</span><span class="p">,</span>
+                  <span class="n">C17i</span><span class="o">=</span><span class="mf">0.0517</span><span class="p">,</span>
+                  <span class="n">C18j</span><span class="o">=</span><span class="mf">7.1029</span><span class="p">,</span>
+                  <span class="n">Kmult</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                  <span class="n">Kplus</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+    <span class="n">exp</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">exp</span> <span class="k">if</span> <span class="n">rv</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">log</span> <span class="k">if</span> <span class="n">rv</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span>
+    <span class="n">sc</span> <span class="o">=</span> <span class="p">(</span><span class="n">exp</span><span class="p">(</span><span class="n">C3b</span><span class="o">*</span><span class="n">log</span><span class="p">(</span><span class="n">vr</span><span class="p">)</span><span class="o">+</span><span class="mf">2.2</span><span class="p">)</span><span class="o">-</span><span class="n">exp</span><span class="p">(</span><span class="n">C7d</span><span class="o">*</span><span class="n">log</span><span class="p">(</span><span class="n">vp</span><span class="p">)</span><span class="o">+</span><span class="n">C8d</span><span class="p">)</span><span class="o">+</span><span class="n">C15h</span><span class="o">*</span><span class="n">exp</span><span class="p">(</span><span class="n">C16h</span><span class="o">*</span><span class="n">P</span><span class="p">)</span><span class="o">-</span><span class="n">C17i</span><span class="o">*</span><span class="n">P</span><span class="o">+</span><span class="n">C18j</span><span class="p">)</span><span class="o">*</span><span class="n">P</span><span class="o">*</span><span class="n">Kmult</span><span class="o">+</span><span class="n">Kplus</span>
+    <span class="k">if</span> <span class="n">rv</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sc</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="c1"># expected value, given random variates</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sc</span>
+
+
+<div class="viewcode-block" id="sylv_cred"><a class="viewcode-back" href="../../ws3.html#ws3.common.sylv_cred">[docs]</a><span class="k">def</span> <span class="nf">sylv_cred</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">vr</span><span class="p">,</span> <span class="n">vp</span><span class="p">,</span> <span class="n">formula</span><span class="p">):</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span><span class="n">_sylv_cred_f1</span><span class="p">,</span>
+         <span class="mi">2</span><span class="p">:</span><span class="n">_sylv_cred_f2</span><span class="p">,</span>
+         <span class="mi">3</span><span class="p">:</span><span class="n">_sylv_cred_f3</span><span class="p">,</span>
+         <span class="mi">4</span><span class="p">:</span><span class="n">_sylv_cred_f4</span><span class="p">,</span>
+         <span class="mi">5</span><span class="p">:</span><span class="n">_sylv_cred_f5</span><span class="p">,</span>
+         <span class="mi">6</span><span class="p">:</span><span class="n">_sylv_cred_f6</span><span class="p">,</span>
+         <span class="mi">7</span><span class="p">:</span><span class="n">_sylv_cred_f7</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">f</span><span class="p">[</span><span class="n">formula</span><span class="p">](</span><span class="n">P</span><span class="p">,</span> <span class="n">vr</span><span class="p">,</span> <span class="n">vp</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="sylv_cred_rv"><a class="viewcode-back" href="../../ws3.html#ws3.common.sylv_cred_rv">[docs]</a><span class="k">def</span> <span class="nf">sylv_cred_rv</span><span class="p">(</span><span class="n">P_mu</span><span class="p">,</span> <span class="n">P_sigma</span><span class="p">,</span> <span class="n">tv_mu</span><span class="p">,</span> <span class="n">tv_sigma</span><span class="p">,</span> <span class="n">N_mu</span><span class="p">,</span> <span class="n">N_sigma</span><span class="p">,</span> <span class="n">psr</span><span class="p">,</span>
+                 <span class="n">treatment_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cover_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">formula</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">P_min</span><span class="o">=</span><span class="mf">20.</span><span class="p">,</span> <span class="n">tv_min</span><span class="o">=</span><span class="mf">50.</span><span class="p">,</span> <span class="n">N_min</span><span class="o">=</span><span class="mf">200.</span><span class="p">,</span> <span class="n">ps_min</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                 <span class="n">E_fromintegral</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">treatment_type</span> <span class="ow">and</span> <span class="n">cover_type</span><span class="p">:</span>
+        <span class="n">formula</span> <span class="o">=</span> <span class="n">sylv_cred_formula</span><span class="p">(</span><span class="n">treatment_type</span><span class="p">,</span> <span class="n">cover_type</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">formula</span>
+    <span class="c1"># PaCAL overrides the | operator to implement conditional distributions</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">NormalDistr</span><span class="p">(</span><span class="n">P_mu</span><span class="p">,</span> <span class="n">P_sigma</span><span class="p">)</span> <span class="o">|</span> <span class="n">pacal</span><span class="o">.</span><span class="n">Gt</span><span class="p">(</span><span class="n">P_min</span><span class="p">)</span>
+    <span class="n">tv</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">NormalDistr</span><span class="p">(</span><span class="n">tv_mu</span><span class="p">,</span> <span class="n">tv_sigma</span><span class="p">)</span> <span class="o">|</span> <span class="n">pacal</span><span class="o">.</span><span class="n">Gt</span><span class="p">(</span><span class="n">tv_min</span><span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">NormalDistr</span><span class="p">(</span><span class="n">N_mu</span><span class="p">,</span> <span class="n">N_sigma</span><span class="p">)</span> <span class="o">|</span> <span class="n">pacal</span><span class="o">.</span><span class="n">Gt</span><span class="p">(</span><span class="n">N_min</span><span class="p">)</span>
+    <span class="n">vp</span> <span class="o">=</span> <span class="p">(</span><span class="n">tv</span> <span class="o">/</span> <span class="n">N</span><span class="p">)</span> <span class="o">|</span> <span class="n">pacal</span><span class="o">.</span><span class="n">Gt</span><span class="p">(</span><span class="n">ps_min</span><span class="p">)</span>
+    <span class="c1">#vr = vp + (vp.mean() * (1 - psr))</span>
+    <span class="c1"># truncate again in case psr &lt; 1 (shifts distn to the left)</span>
+    <span class="n">vr</span> <span class="o">=</span> <span class="p">(</span><span class="n">vp</span> <span class="o">+</span> <span class="p">(</span><span class="n">vp</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="n">psr</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">)))</span> <span class="o">|</span> <span class="n">pacal</span><span class="o">.</span><span class="n">Gt</span><span class="p">(</span><span class="n">ps_min</span><span class="p">)</span>  
+    <span class="n">f</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span><span class="n">_sylv_cred_f1</span><span class="p">,</span>
+         <span class="mi">2</span><span class="p">:</span><span class="n">_sylv_cred_f2</span><span class="p">,</span>
+         <span class="mi">3</span><span class="p">:</span><span class="n">_sylv_cred_f3</span><span class="p">,</span>
+         <span class="mi">4</span><span class="p">:</span><span class="n">_sylv_cred_f4</span><span class="p">,</span>
+         <span class="mi">5</span><span class="p">:</span><span class="n">_sylv_cred_f5</span><span class="p">,</span>
+         <span class="mi">6</span><span class="p">:</span><span class="n">_sylv_cred_f6</span><span class="p">,</span>
+         <span class="mi">7</span><span class="p">:</span><span class="n">_sylv_cred_f7</span><span class="p">}</span>
+    <span class="c1">#print &#39; formula&#39;, formula</span>
+    <span class="k">if</span> <span class="n">E_fromintegral</span><span class="p">:</span>
+        <span class="c1"># estimate expected value E(f(P, vr, vp)) using PaCAL numerical integration functions (sssssslow!) </span>
+        <span class="n">E</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">formula</span><span class="p">](</span><span class="n">P</span><span class="p">,</span> <span class="n">vr</span><span class="p">,</span> <span class="n">vp</span><span class="p">,</span> <span class="n">rv</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># estimate expected value E(f(P, vr, vp)) using Monte Carlo simulation (until convergence to E_tol)</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="n">dE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="n">dE</span> <span class="o">&gt;</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">P</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">vr</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">vp</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+            <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># process random args in in n-length chunks</span>
+                <span class="n">_E</span> <span class="o">=</span> <span class="n">E</span>
+                <span class="n">E</span> <span class="o">=</span> <span class="p">((</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">E</span> <span class="o">+</span> <span class="n">f</span><span class="p">[</span><span class="n">formula</span><span class="p">](</span><span class="o">*</span><span class="n">args</span><span class="o">.</span><span class="n">pop</span><span class="p">()))</span> <span class="o">/</span> <span class="n">i</span>
+                <span class="n">dE</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">((</span><span class="n">E</span> <span class="o">-</span> <span class="n">_E</span><span class="p">)</span> <span class="o">/</span> <span class="n">_E</span><span class="p">)</span> <span class="k">if</span> <span class="n">_E</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">E</span></div>
+
+
+<div class="viewcode-block" id="sylv_cred_formula"><a class="viewcode-back" href="../../ws3.html#ws3.common.sylv_cred_formula">[docs]</a><span class="k">def</span> <span class="nf">sylv_cred_formula</span><span class="p">(</span><span class="n">treatment_type</span><span class="p">,</span> <span class="n">cover_type</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">treatment_type</span> <span class="o">==</span> <span class="s1">&#39;ec&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">cover_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">2</span>
+    <span class="k">if</span> <span class="n">treatment_type</span> <span class="o">==</span> <span class="s1">&#39;cj&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">4</span>
+    <span class="k">if</span> <span class="n">treatment_type</span> <span class="o">==</span> <span class="s1">&#39;cprog&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">7</span> <span class="k">if</span> <span class="n">cover_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">4</span>        
+    <span class="k">return</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="piece_size_ratio"><a class="viewcode-back" href="../../ws3.html#ws3.common.piece_size_ratio">[docs]</a><span class="k">def</span> <span class="nf">piece_size_ratio</span><span class="p">(</span><span class="n">treatment_type</span><span class="p">,</span> <span class="n">cover_type</span><span class="p">,</span> <span class="n">piece_size_ratios</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Assume Action.is_harvest in [0, 1, 2, 3]</span>
+<span class="sd">    Assume cover_type in [&#39;r&#39;, &#39;m&#39;, &#39;f&#39;]</span>
+<span class="sd">    Return vr/vp ratio, where</span>
+<span class="sd">      vr is mean piece size of harvested stems, and</span>
+<span class="sd">      vp is mean piece size of stand before harvesting.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">treatment_type</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="ow">and</span> <span class="n">cover_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">piece_size_ratios</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">piece_size_ratios</span><span class="p">[</span><span class="n">treatment_type</span><span class="p">][</span><span class="n">cover_type</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">1.</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.</span></div>
+
+
+<div class="viewcode-block" id="harv_cost"><a class="viewcode-back" href="../../ws3.html#ws3.common.harv_cost">[docs]</a><span class="k">def</span> <span class="nf">harv_cost</span><span class="p">(</span><span class="n">piece_size</span><span class="p">,</span>
+              <span class="n">is_finalcut</span><span class="p">,</span>
+              <span class="n">is_toleranthw</span><span class="p">,</span>
+              <span class="n">partialcut_extracare</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>              
+              <span class="n">A</span><span class="o">=</span><span class="mf">1.97</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="mf">0.405</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">0.169</span><span class="p">,</span> <span class="n">D</span><span class="o">=</span><span class="mf">0.164</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mf">0.202</span><span class="p">,</span> <span class="n">F</span><span class="o">=</span><span class="mf">13.6</span><span class="p">,</span> <span class="n">G</span><span class="o">=</span><span class="mf">8.83</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+              <span class="n">rv</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">_ifc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">is_finalcut</span><span class="p">)</span>
+    <span class="n">_ith</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">is_toleranthw</span><span class="p">)</span>
+    <span class="n">_pce</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">partialcut_extracare</span><span class="p">)</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">log</span> <span class="k">if</span> <span class="n">rv</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span>
+    <span class="n">exp</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">exp</span> <span class="k">if</span> <span class="n">rv</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span>
+    <span class="n">_exp</span> <span class="o">=</span> <span class="n">A</span> <span class="o">-</span> <span class="p">(</span><span class="n">B</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">piece_size</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="n">C</span> <span class="o">*</span> <span class="n">_pce</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">D</span> <span class="o">*</span> <span class="n">_ifc</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">E</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">_ith</span><span class="p">))</span>
+    <span class="n">hc</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="n">_exp</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">F</span> <span class="o">*</span> <span class="n">_ith</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">G</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">_ith</span><span class="p">)))</span> <span class="o">+</span> <span class="n">K</span>
+    <span class="k">if</span> <span class="n">rv</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">hc</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">hc</span></div>
+
+    
+<div class="viewcode-block" id="harv_cost_rv"><a class="viewcode-back" href="../../ws3.html#ws3.common.harv_cost_rv">[docs]</a><span class="k">def</span> <span class="nf">harv_cost_rv</span><span class="p">(</span><span class="n">tv_mu</span><span class="p">,</span> <span class="n">tv_sigma</span><span class="p">,</span> <span class="n">N_mu</span><span class="p">,</span> <span class="n">N_sigma</span><span class="p">,</span> <span class="n">psr</span><span class="p">,</span>
+                 <span class="n">is_finalcut</span><span class="p">,</span>
+                 <span class="n">is_toleranthw</span><span class="p">,</span>
+                 <span class="n">partialcut_extracare</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">tv_min</span><span class="o">=</span><span class="mf">50.</span><span class="p">,</span> <span class="n">N_min</span><span class="o">=</span><span class="mf">200.</span><span class="p">,</span> <span class="n">ps_min</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                 <span class="n">E_fromintegral</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="c1"># PaCAL overrides the | operator to implement conditional distributions</span>
+    <span class="n">tv</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">NormalDistr</span><span class="p">(</span><span class="n">tv_mu</span><span class="p">,</span> <span class="n">tv_sigma</span><span class="p">)</span> <span class="o">|</span> <span class="n">pacal</span><span class="o">.</span><span class="n">Gt</span><span class="p">(</span><span class="n">tv_min</span><span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">NormalDistr</span><span class="p">(</span><span class="n">N_mu</span><span class="p">,</span> <span class="n">N_sigma</span><span class="p">)</span> <span class="o">|</span> <span class="n">pacal</span><span class="o">.</span><span class="n">Gt</span><span class="p">(</span><span class="n">N_min</span><span class="p">)</span>
+    <span class="n">vp</span> <span class="o">=</span> <span class="p">(</span><span class="n">tv</span> <span class="o">/</span> <span class="n">N</span><span class="p">)</span> <span class="o">|</span> <span class="n">pacal</span><span class="o">.</span><span class="n">Gt</span><span class="p">(</span><span class="n">ps_min</span><span class="p">)</span>
+    <span class="c1">#vr = vp + (vp.mean() * (1 - psr))</span>
+    <span class="c1"># truncate again in case psr &lt; 1 (shifts distn to the left)</span>
+    <span class="n">vr</span> <span class="o">=</span> <span class="p">(</span><span class="n">vp</span> <span class="o">+</span> <span class="p">(</span><span class="n">vp</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="n">psr</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">)))</span> <span class="o">|</span> <span class="n">pacal</span><span class="o">.</span><span class="n">Gt</span><span class="p">(</span><span class="n">ps_min</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">E_fromintegral</span><span class="p">:</span>
+        <span class="c1"># estimate expected value E(f(vr)) using PaCAL numerical integration functions (sssssslow!) </span>
+        <span class="n">E</span> <span class="o">=</span> <span class="n">harv_cost</span><span class="p">(</span><span class="n">vr</span><span class="p">,</span> <span class="n">is_finalcut</span><span class="p">,</span> <span class="n">is_toleranthw</span><span class="p">,</span> <span class="n">rv</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># estimate expected value E(f(vr)) using Monte Carlo simulation (until convergence to E_tol)</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="n">dE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="n">dE</span> <span class="o">&gt;</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">vr</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+            <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># process random args in in n-length chunks</span>
+                <span class="n">_E</span> <span class="o">=</span> <span class="n">E</span>
+                <span class="n">E</span> <span class="o">=</span> <span class="p">((</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">E</span> <span class="o">+</span> <span class="n">harv_cost</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">pop</span><span class="p">(),</span> <span class="n">is_finalcut</span><span class="p">,</span> <span class="n">is_toleranthw</span><span class="p">))</span> <span class="o">/</span> <span class="n">i</span>
+                <span class="n">dE</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">((</span><span class="n">E</span> <span class="o">-</span> <span class="n">_E</span><span class="p">)</span> <span class="o">/</span> <span class="n">_E</span><span class="p">)</span> <span class="k">if</span> <span class="n">_E</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">E</span></div>
+
+
+<div class="viewcode-block" id="harv_cost_wec"><a class="viewcode-back" href="../../ws3.html#ws3.common.harv_cost_wec">[docs]</a><span class="k">def</span> <span class="nf">harv_cost_wec</span><span class="p">(</span><span class="n">piece_size</span><span class="p">,</span>
+                  <span class="n">is_finalcut</span><span class="p">,</span>
+                  <span class="n">is_toleranthw</span><span class="p">,</span>
+                  <span class="n">sigma</span><span class="p">,</span>
+                  <span class="n">nsigmas</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Estimate harvest cost with error correction.</span>
+<span class="sd">    :float piece_size: mean piece size</span>
+<span class="sd">    :bool is_finalcut: True if harvest treatment is final cut, False otherwise</span>
+<span class="sd">    :bool is_toleranthw: True if tolerant hardwood cover type, False otherwise</span>
+<span class="sd">    :float sigma: standard deviation of piece size estimator</span>
+<span class="sd">    :int nsigmas: number of standard deviations to model on either side of the mean (default 3)</span>
+<span class="sd">    :float binw: width of bins for weighted numerical integration, in multiples of sigma (default 1.0)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># bin centerpoints</span>
+    <span class="n">rv</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">piece_size</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([(</span><span class="n">piece_size</span> <span class="o">+</span> <span class="p">(</span><span class="n">sigma</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">))</span> <span class="o">*</span> <span class="n">sign</span><span class="p">))</span> 
+               <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nsigmas</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">sign</span> <span class="ow">in</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">harv_cost</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">is_finalcut</span><span class="p">,</span> <span class="n">is_toleranthw</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">*</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rv</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">)</span></div>
+        
+
+<span class="k">class</span> <span class="nc">rvquot_gen</span><span class="p">(</span><span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">rv_continuous</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">locn</span><span class="p">,</span> <span class="n">scalen</span><span class="p">,</span> 
+                 <span class="n">locd</span><span class="p">,</span> <span class="n">scaled</span><span class="p">,</span>
+                 <span class="n">a</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                 <span class="n">b</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                 <span class="n">name</span><span class="o">=</span><span class="s1">&#39;rvquot&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">rvquot_gen</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pacal_dist</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">NormalDistr</span><span class="p">(</span><span class="n">locn</span><span class="p">,</span> <span class="n">scalen</span><span class="p">)</span> <span class="o">/</span> <span class="n">pacal</span><span class="o">.</span><span class="n">NormalDistr</span><span class="p">(</span><span class="n">locd</span><span class="p">,</span> <span class="n">scaled</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">integral</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">integrate</span><span class="o">.</span><span class="n">quad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pacal_dist</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">integral</span>
+
+
+<div class="viewcode-block" id="rvquot_gen"><a class="viewcode-back" href="../../ws3.html#ws3.common.rvquot_gen">[docs]</a><span class="k">class</span> <span class="nc">rvquot_gen</span><span class="p">(</span><span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">rv_continuous</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">locn</span><span class="p">,</span> <span class="n">scalen</span><span class="p">,</span> 
+                 <span class="n">locd</span><span class="p">,</span> <span class="n">scaled</span><span class="p">,</span>
+                 <span class="n">a</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                 <span class="n">b</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                 <span class="n">name</span><span class="o">=</span><span class="s1">&#39;rvquot&#39;</span><span class="p">,</span>
+                 <span class="n">loc</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">rvquot_gen</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pacal_dist</span> <span class="o">=</span> <span class="n">pacal</span><span class="o">.</span><span class="n">NormalDistr</span><span class="p">(</span><span class="n">locn</span><span class="p">,</span> <span class="n">scalen</span><span class="p">)</span> <span class="o">/</span> <span class="n">pacal</span><span class="o">.</span><span class="n">NormalDistr</span><span class="p">(</span><span class="n">locd</span><span class="p">,</span> <span class="n">scaled</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loc</span> <span class="o">=</span> <span class="n">loc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">integral</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">integrate</span><span class="o">.</span><span class="n">quad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        
+<div class="viewcode-block" id="rvquot_gen.f"><a class="viewcode-back" href="../../ws3.html#ws3.common.rvquot_gen.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pacal_dist</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">loc</span><span class="p">)</span></div>
+        
+    <span class="k">def</span> <span class="nf">_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">integral</span></div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">ws3</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Gregory Paradis.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
